@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { modelControllerGetModels } from "@/shared/api/api";
+import { modelControllerGetModels } from "@/shared/api/fusionbrain-api";
 
 const modelsKey = ["models"] as unknown[];
 

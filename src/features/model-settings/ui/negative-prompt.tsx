@@ -1,6 +1,6 @@
 import { Label } from "@/shared/ui/label";
 import { Textarea } from "@/shared/ui/textarea";
-import { useSettingsStore } from "@/entities/settings/use-settings";
+import { useSettingsStore } from "@/entities/settings/use-settings-store";
 
 export function NegativePrompt({}) {
   const negativePrompt = useSettingsStore((state) => state.negativePrompt);

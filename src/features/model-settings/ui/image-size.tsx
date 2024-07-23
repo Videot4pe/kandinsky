@@ -1,6 +1,6 @@
 import { Label } from "@/shared/ui/label";
 import { Input } from "@/shared/ui/input";
-import { useSettingsStore } from "@/entities/settings/use-settings";
+import { useSettingsStore } from "@/entities/settings/use-settings-store";
 
 export function ImageSize({}) {
   const width = useSettingsStore((state) => state.width);

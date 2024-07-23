@@ -30,7 +30,7 @@ export function MessageList() {
       <div ref={messagesContainerRef as LegacyRef<HTMLDivElement>}>
         <AnimatePresence>
           {messages.data?.map((message, index) => (
-            <Message index={index} uuid={message.uuid} key={message.uuid} />
+            <Message index={index} message={message} key={message.uuid} />
           ))}
         </AnimatePresence>
       </div>

@@ -9,17 +9,15 @@ import {
 import { Brush, RefreshCw, ShieldX } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { queryClient } from "@/shared/api/query-client";
-import { useMessage } from "@/features/message-area/model/use-message";
 
 interface MessageProps {
   index: number;
   message: IMessage;
 }
 
-export function Message({ index, uuid }: MessageProps) {
-  const { data } = useMessage(uuid);
-  const message = data;
+export function Message({ index, message }: MessageProps) {
+  // const { data } = useMessage(uuid);
+  // const message = data;
   const { isLoading, refetch } = useMessageStatus(message);
 
   if (!message) {
@@ -67,7 +65,8 @@ export function Message({ index, uuid }: MessageProps) {
             {isLoading && <Brush className="w-12 h-12 animate-bounce my-6" />}
             {message.image && (
               <a href={message.image} download={message.uuid}>
-                <img src={message.image} alt={message.text} />
+                {message.image}
+                {/*<img src={message.image} alt={message.text} />*/}
               </a>
             )}
             {needRetry && (

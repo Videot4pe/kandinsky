@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   modelControllerCheckGeneration,
   modelControllerGenerate,
-} from "@/shared/api/api";
+} from "@/shared/api/fusionbrain-api";
 import {
   addMessage,
   getMessages,
@@ -36,10 +36,10 @@ export function useUpdateMessageMutation(uuid: string) {
               )
             : []
       );
-      queryClient.setQueryData<IMessage>(
-        [...messageListKey, uuid],
-        () => newMessage
-      );
+      // queryClient.setQueryData<IMessage>(
+      //   [...messageListKey, uuid],
+      //   () => newMessage
+      // );
       // queryClient.invalidateQueries({
       //   queryKey: messageListKey,
       //   exact: true,
@@ -48,20 +48,18 @@ export function useUpdateMessageMutation(uuid: string) {
     },
   });
 }
+
 export function useAddUpdateMessageMutation() {
   return useMutation<IMessage, unknown, IMessage>({
-    mutationKey: [...messageKey],
+    mutationKey: [...messageListKey],
     mutationFn: (message: IMessage) => addMessage(message),
     onSuccess: (newMessage: IMessage) => {
+      console.log("new: ", newMessage);
       queryClient.setQueryData<IMessage[]>(
         messageListKey,
         (previous: IMessage[] | undefined) =>
           previous ? [...previous, newMessage] : [newMessage]
       );
-      queryClient.setQueryData<IMessage>(
-        [...messageListKey, uuid],
-        () => newMessage
-      );
       // queryClient.invalidateQueries({
       //   queryKey: messageListKey,
       //   exact: true,
@@ -70,6 +68,7 @@ export function useAddUpdateMessageMutation() {
     },
   });
 }
+
 export function useMessages() {
   return useQuery({
     queryKey: messageListKey,
@@ -90,7 +89,7 @@ export function useUpdateMessageQuery(uuid: string, isEnabled: boolean) {
     queryFn: () => modelControllerCheckGeneration(uuid),
     enabled: isEnabled,
     retry: 10,
-    retryDelay: 2500,
+    retryDelay: 3500,
   });
 }
 
@@ -99,9 +98,9 @@ export function useMessageQuery(uuid: string) {
     queryKey: [...messageListKey, uuid],
     queryFn: () => getMessage(uuid),
     initialData: () => {
-      return queryClient
-        .getQueryData(messageListKey)
-        ?.find((message) => message.uuid === uuid);
+      return (queryClient.getQueryData(messageListKey) as IMessage[]).find(
+        (message) => message.uuid === uuid
+      );
     },
   });
 }

@@ -8,7 +8,7 @@ import {
 import { Label } from "@/shared/ui/label";
 import { useStyles } from "@/features/model-settings/model/use-styles";
 import { useEffect, useState } from "react";
-import { useSettingsStore } from "@/entities/settings/use-settings";
+import { useSettingsStore } from "@/entities/settings/use-settings-store";
 import { useModels } from "@/features/model-settings/model/use-models";
 
 export function ModelVersion({}) {
