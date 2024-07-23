@@ -1,6 +1,6 @@
 "use client";
 
-import { LegacyRef, useRef } from "react";
+import { LegacyRef, useEffect, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Message } from "@/features/message-area/ui/message";
 import { useMutationObserver } from "@/shared/lib/use-mutation-observer";
@@ -20,6 +20,9 @@ export function MessageList() {
     }
   };
 
+  useEffect(() => {
+    scrollBottom();
+  }, []);
   useMutationObserver(messagesContainerRef, scrollBottom);
 
   return (
@@ -27,11 +30,7 @@ export function MessageList() {
       <div ref={messagesContainerRef as LegacyRef<HTMLDivElement>}>
         <AnimatePresence>
           {messages.data?.map((message, index) => (
-            <Message
-              index={index}
-              message={message as IMessage}
-              key={message.uuid}
-            />
+            <Message index={index} uuid={message.uuid} key={message.uuid} />
           ))}
         </AnimatePresence>
       </div>

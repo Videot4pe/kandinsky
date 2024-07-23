@@ -2,8 +2,8 @@ import {
   useUpdateMessageMutation,
   useUpdateMessageQuery,
 } from "@/entities/message-area/queries";
-import { uploadBase64ToS3 } from "@/shared/api/s3";
 import { v4 as uuidv4 } from "uuid";
+import { uploadBase64ToS3 } from "@/shared/api/s3";
 
 export type IMessage = {
   uuid: string;
@@ -13,30 +13,29 @@ export type IMessage = {
   censored?: boolean;
   hasError?: boolean;
   notFound?: boolean;
-  createdAt?: string;
+  createdAt?: string | Date;
   image?: string;
 };
 
-export const useMessageStatus = (
-  message: IMessage,
-  { retry } = { retry: 10 }
-) => {
+export const useMessageStatus = (message: IMessage) => {
   const messageQuery = useUpdateMessageQuery(
     message.uuid,
     !message.image && !message.notFound
   );
   const updateMessageMutation = useUpdateMessageMutation(message.uuid);
 
-  if (message.notFound || message.image) {
-    return false;
+  if (!message) {
+    return { isLoading: false, refetch: () => {} };
   }
 
-  const update = async (message, image?: string) => {
-    if (image) {
-      const imageName = `${uuidv4()}.png`;
-      message.image = await uploadBase64ToS3(image, imageName);
-    }
-    await updateMessageMutation.mutate(message);
+  const update = async (message: IMessage, image?: string) => {
+    setTimeout(async () => {
+      if (image) {
+        const imageName = `${uuidv4()}.png`;
+        message.image = await uploadBase64ToS3(image, imageName);
+      }
+      await updateMessageMutation.mutateAsync(message);
+    }, 0);
   };
 
   if (messageQuery.data) {

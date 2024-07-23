@@ -9,17 +9,25 @@ import {
 import { Brush, RefreshCw, ShieldX } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { queryClient } from "@/shared/api/query-client";
+import { useMessage } from "@/features/message-area/model/use-message";
 
 interface MessageProps {
   index: number;
   message: IMessage;
 }
 
-export function Message({ index, message }: MessageProps) {
+export function Message({ index, uuid }: MessageProps) {
+  const { data } = useMessage(uuid);
+  const message = data;
   const { isLoading, refetch } = useMessageStatus(message);
 
+  if (!message) {
+    return;
+  }
+
   const needRetry =
-    !message.image && !message.notFound && !isLoading && !message.censored;
+    !message.image && !message.notFound && !message.censored && !isLoading;
 
   return (
     <motion.div
@@ -65,7 +73,7 @@ export function Message({ index, message }: MessageProps) {
             {needRetry && (
               <RefreshCw
                 className="w-12 h-12 my-6 cursor-pointer"
-                onClick={refetch}
+                onClick={() => refetch()}
               />
             )}
           </>

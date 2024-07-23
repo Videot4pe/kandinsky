@@ -26,7 +26,7 @@ export function ModelStyles({}) {
 
   return (
     <div className="grid gap-3">
-      <Label htmlFor="model">Style {style}</Label>
+      <Label htmlFor="model">Style</Label>
       <Select
         disabled={isLoading}
         value={style}

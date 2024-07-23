@@ -4,15 +4,13 @@ import { Label } from "@/shared/ui/label";
 import { Textarea } from "@/shared/ui/textarea";
 import { Button } from "@/shared/ui/button";
 import { CornerDownLeft, Loader2 } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useSettingsStore } from "@/entities/settings/use-settings";
 import { ModelDto } from "@/shared/api/api";
 import { useMessageInput } from "@/features/message-area/model/use-message-input";
 import { useToast } from "@/shared/ui/use-toast";
 import { ToastAction } from "@/shared/ui/toast";
-import { addMessage } from "@/features/message-area/model/use-message";
 import { useSession } from "next-auth/react";
-import { invalidateOnCreateMessages } from "@/entities/message-area/invalidate";
 import { useAddUpdateMessageMutation } from "@/entities/message-area/queries";
 import { IMessage } from "@/features/message-area/model/use-message-status";
 
@@ -31,20 +29,17 @@ export function MessageInput({}) {
   // TODO FIX!!!
   const modelVersion = useSettingsStore((state) => state.model);
 
-  const request = useMemo(
-    (): ModelDto => ({
-      type: "GENERATE",
-      numImages: 1,
-      width: store.width,
-      height: store.height,
-      style: store.style,
-      negativePromptUnclip: store.negativePrompt,
-      generateParams: {
-        query: message,
-      },
-    }),
-    [store, message]
-  );
+  const request: ModelDto = {
+    type: "GENERATE",
+    numImages: 1,
+    width: store.width,
+    height: store.height,
+    style: store.style,
+    negativePromptUnclip: store.negativePrompt,
+    generateParams: {
+      query: message,
+    },
+  };
 
   const onSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();

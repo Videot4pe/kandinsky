@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import YandexProvider from "next-auth/providers/yandex";
 
-export const authOptions = {
+const authOptions = {
   providers: [
     GithubProvider({
       clientId: process.env.NEXT_PUBLIC_GITHUB_ID ?? "",

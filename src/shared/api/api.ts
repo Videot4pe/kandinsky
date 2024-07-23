@@ -70,7 +70,11 @@ export const modelControllerGenerate = (
 export const modelControllerCheckGeneration = async (
   uuid: string,
   options?: SecondParameter<typeof createInstance>
-) => {
+): Promise<{
+  censored?: boolean;
+  images?: string[];
+  notFound?: boolean;
+}> => {
   try {
     const data = await createInstance<{ images: string[] }>(
       {
@@ -84,7 +88,7 @@ export const modelControllerCheckGeneration = async (
     }
     return new Promise((res) => res(data));
   } catch (e) {
-    if (e.response?.status === 404) {
+    if ((e as { response?: { status?: number } }).response?.status === 404) {
       return new Promise((res) => res({ notFound: true }));
     }
     throw e;

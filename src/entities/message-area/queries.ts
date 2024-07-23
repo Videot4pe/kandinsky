@@ -1,4 +1,4 @@
-import { QueryFilters, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   modelControllerCheckGeneration,
   modelControllerGenerate,
@@ -6,8 +6,9 @@ import {
 import {
   addMessage,
   getMessages,
+  getMessage,
   updateMessage,
-} from "@/features/message-area/model/use-message";
+} from "@/shared/api/prisma-api";
 import { queryClient } from "@/shared/api/query-client";
 import { IMessage } from "@/features/message-area/model/use-message-status";
 
@@ -22,35 +23,49 @@ export function useCreateMessageMutation() {
 }
 
 export function useUpdateMessageMutation(uuid: string) {
-  return useMutation({
+  return useMutation<IMessage, unknown, IMessage>({
     mutationKey: [...messageKey, uuid],
     mutationFn: (message: IMessage) => updateMessage(uuid, message),
-    onSuccess: (newMessage) => {
-      queryClient.setQueriesData(messageListKey as QueryFilters, (previous) =>
-        previous.map((message) =>
-          message.uuid === newMessage.uuid ? newMessage : message
-        )
+    onSuccess: (newMessage: IMessage) => {
+      queryClient.setQueryData<IMessage[]>(
+        messageListKey,
+        (previous: IMessage[] | undefined) =>
+          previous
+            ? previous.map((message) =>
+                message.uuid === newMessage.uuid ? newMessage : message
+              )
+            : []
       );
-      // queryClient.invalidateQueries(messageListKey, {
+      queryClient.setQueryData<IMessage>(
+        [...messageListKey, uuid],
+        () => newMessage
+      );
+      // queryClient.invalidateQueries({
+      //   queryKey: messageListKey,
       //   exact: true,
-      //   refetchActive: false,
+      //   refetchType: "all",
       // });
     },
   });
 }
-
 export function useAddUpdateMessageMutation() {
-  return useMutation({
+  return useMutation<IMessage, unknown, IMessage>({
     mutationKey: [...messageKey],
     mutationFn: (message: IMessage) => addMessage(message),
-    onSuccess: (newMessage) => {
-      queryClient.setQueriesData(messageListKey as QueryFilters, (previous) => [
-        ...previous,
-        newMessage,
-      ]);
-      // queryClient.invalidateQueries(messageListKey, {
+    onSuccess: (newMessage: IMessage) => {
+      queryClient.setQueryData<IMessage[]>(
+        messageListKey,
+        (previous: IMessage[] | undefined) =>
+          previous ? [...previous, newMessage] : [newMessage]
+      );
+      queryClient.setQueryData<IMessage>(
+        [...messageListKey, uuid],
+        () => newMessage
+      );
+      // queryClient.invalidateQueries({
+      //   queryKey: messageListKey,
       //   exact: true,
-      //   refetchActive: false,
+      //   refetchType: "all",
       // });
     },
   });
@@ -63,11 +78,30 @@ export function useMessages() {
 }
 
 export function useUpdateMessageQuery(uuid: string, isEnabled: boolean) {
-  return useQuery({
+  return useQuery<
+    {
+      censored?: boolean;
+      images?: string[];
+      notFound?: boolean;
+    },
+    { response?: { status?: number } }
+  >({
     queryKey: [...messageKey, uuid],
     queryFn: () => modelControllerCheckGeneration(uuid),
     enabled: isEnabled,
     retry: 10,
     retryDelay: 2500,
+  });
+}
+
+export function useMessageQuery(uuid: string) {
+  return useQuery<IMessage>({
+    queryKey: [...messageListKey, uuid],
+    queryFn: () => getMessage(uuid),
+    initialData: () => {
+      return queryClient
+        .getQueryData(messageListKey)
+        ?.find((message) => message.uuid === uuid);
+    },
   });
 }
