@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/shared/ui/button";
 import { SignBtn } from "@/features/auth/ui/sign-btn";
@@ -11,8 +13,17 @@ import {
 } from "@/shared/ui/sheet";
 import { Menu } from "lucide-react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { cn } from "@/shared/lib/utils";
+import { usePathname } from "next/navigation";
 
 export function Header({ children }: { children?: any }) {
+  const pathname = usePathname();
+
+  const routes = [
+    { title: "Home", path: "/" },
+    { title: "Gallery", path: "/gallery" },
+  ];
+
   return (
     <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
       <div className="w-full flex justify-between">
@@ -23,18 +34,18 @@ export function Header({ children }: { children?: any }) {
           >
             <h1 className="text-xl font-semibold self-center">Kandinsky</h1>
           </Link>
-          <Link
-            href="/"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Home
-          </Link>
-          <Link
-            href="/gallery"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Gallery
-          </Link>
+          {routes.map((route) => (
+            <Link
+              className={cn(
+                "transition-colors hover:text-foreground",
+                route.path !== pathname && "text-muted-foreground"
+              )}
+              key={route.path}
+              href={route.path}
+            >
+              {route.title}
+            </Link>
+          ))}
         </nav>
         <div className="flex">
           <Sheet>
@@ -66,18 +77,18 @@ export function Header({ children }: { children?: any }) {
                     Kandinsky
                   </h1>
                 </Link>
-                <Link
-                  href="/"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Home
-                </Link>
-                <Link
-                  href="/gallery"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Gallery
-                </Link>
+                {routes.map((route) => (
+                  <Link
+                    className={cn(
+                      "transition-colors hover:text-foreground",
+                      route.path !== pathname && "text-muted-foreground"
+                    )}
+                    key={route.path}
+                    href={route.path}
+                  >
+                    {route.title}
+                  </Link>
+                ))}
               </nav>
             </SheetContent>
           </Sheet>
