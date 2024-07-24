@@ -9,11 +9,17 @@ import {
   getMessage,
   updateMessage,
 } from "@/shared/api/prisma-api";
-import { queryClient } from "@/shared/api/query-client";
-import { IMessage } from "@/features/message-area/model/use-message-status";
+import { getQueryClient } from "@/shared/api/query-client";
+import { IMessage } from "@/features/message-area/model/types";
+import { uploadBase64ToS3 } from "@/shared/api/s3-api";
 
 const messageKey = ["message"] as string[];
 const messageListKey = ["messages"] as string[];
+
+interface ImageData {
+  image: string;
+  imageName: string;
+}
 
 export function useCreateMessageMutation() {
   return useMutation({
@@ -27,25 +33,26 @@ export function useUpdateMessageMutation(uuid: string) {
     mutationKey: [...messageKey, uuid],
     mutationFn: (message: IMessage) => updateMessage(uuid, message),
     onSuccess: (newMessage: IMessage) => {
-      queryClient.setQueryData<IMessage[]>(
+      getQueryClient().setQueryData<IMessage[]>(
         messageListKey,
         (previous: IMessage[] | undefined) =>
           previous
-            ? previous.map((message) =>
-                message.uuid === newMessage.uuid ? newMessage : message
+            ? previous.map((msg) =>
+                msg.uuid === newMessage.uuid ? newMessage : msg
               )
             : []
       );
-      // queryClient.setQueryData<IMessage>(
-      //   [...messageListKey, uuid],
-      //   () => newMessage
-      // );
-      // queryClient.invalidateQueries({
-      //   queryKey: messageListKey,
-      //   exact: true,
-      //   refetchType: "all",
-      // });
     },
+  });
+}
+
+export function useUpdateMessageImageMutation(uuid: string) {
+  const mutationKey = [...messageKey, uuid];
+  const mutationFn = ({ image, imageName }: ImageData) =>
+    uploadBase64ToS3(image, imageName);
+  return useMutation<string, unknown, ImageData>({
+    mutationKey,
+    mutationFn,
   });
 }
 
@@ -54,8 +61,7 @@ export function useAddUpdateMessageMutation() {
     mutationKey: [...messageListKey],
     mutationFn: (message: IMessage) => addMessage(message),
     onSuccess: (newMessage: IMessage) => {
-      console.log("new: ", newMessage);
-      queryClient.setQueryData<IMessage[]>(
+      getQueryClient().setQueryData<IMessage[]>(
         messageListKey,
         (previous: IMessage[] | undefined) =>
           previous ? [...previous, newMessage] : [newMessage]
@@ -90,17 +96,5 @@ export function useUpdateMessageQuery(uuid: string, isEnabled: boolean) {
     enabled: isEnabled,
     retry: 10,
     retryDelay: 3500,
-  });
-}
-
-export function useMessageQuery(uuid: string) {
-  return useQuery<IMessage>({
-    queryKey: [...messageListKey, uuid],
-    queryFn: () => getMessage(uuid),
-    initialData: () => {
-      return (queryClient.getQueryData(messageListKey) as IMessage[]).find(
-        (message) => message.uuid === uuid
-      );
-    },
   });
 }

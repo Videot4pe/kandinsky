@@ -1,18 +1,11 @@
 "use client";
 
+import React from "react";
 import { Label } from "@/shared/ui/label";
 import { Textarea } from "@/shared/ui/textarea";
 import { Button } from "@/shared/ui/button";
 import { CornerDownLeft, Loader2 } from "lucide-react";
-import React, { useState } from "react";
-import { useSettingsStore } from "@/entities/settings/use-settings-store";
-import { ModelDto } from "@/shared/api/fusionbrain-api";
 import { useMessageInput } from "@/features/message-area/model/use-message-input";
-import { useToast } from "@/shared/ui/use-toast";
-import { ToastAction } from "@/shared/ui/toast";
-import { useSession } from "next-auth/react";
-import { useAddUpdateMessageMutation } from "@/entities/message-area/queries";
-import { IMessage } from "@/features/message-area/model/use-message-status";
 
 const MAX_LENGTH = 1000;
 

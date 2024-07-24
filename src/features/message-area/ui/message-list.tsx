@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { Message } from "@/features/message-area/ui/message";
 import { useMutationObserver } from "@/shared/lib/use-mutation-observer";
 import { useMessages } from "@/entities/message-area/queries";
-import { IMessage } from "@/features/message-area/model/use-message-status";
+import { IMessage } from "@/features/message-area/model/types";
 
 export function MessageList() {
   const messages = useMessages();

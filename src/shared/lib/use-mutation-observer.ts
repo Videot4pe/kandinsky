@@ -1,4 +1,4 @@
-import React, { MutableRefObject } from "react";
+import { MutableRefObject, useEffect } from "react";
 
 export const useMutationObserver = (
   ref: MutableRefObject<HTMLDivElement | undefined>,
@@ -10,11 +10,11 @@ export const useMutationObserver = (
     subtree: true,
   }
 ) => {
-  React.useEffect(() => {
+  useEffect(() => {
     if (ref.current) {
       const observer = new MutationObserver(callback);
-      observer.observe(ref.current, options);
+      observer.observe(ref.current as Node, options);
       return () => observer.disconnect();
     }
-  }, [callback, options]);
+  }, [callback, options, ref]);
 };

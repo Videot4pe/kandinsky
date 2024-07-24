@@ -2,13 +2,12 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import {
-  IMessage,
-  useMessageStatus,
-} from "@/features/message-area/model/use-message-status";
+import { useMessageStatus } from "@/features/message-area/model/use-message-status";
 import { Brush, RefreshCw, ShieldX } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { IMessage } from "@/features/message-area/model/types";
+import Image from "next/image";
 
 interface MessageProps {
   index: number;
@@ -65,8 +64,7 @@ export function Message({ index, message }: MessageProps) {
             {isLoading && <Brush className="w-12 h-12 animate-bounce my-6" />}
             {message.image && (
               <a href={message.image} download={message.uuid}>
-                {message.image}
-                {/*<img src={message.image} alt={message.text} />*/}
+                <img src={message.image} alt={message.text} />
               </a>
             )}
             {needRetry && (

@@ -1,64 +1,72 @@
 import {
+  useUpdateMessageImageMutation,
   useUpdateMessageMutation,
   useUpdateMessageQuery,
 } from "@/entities/message-area/queries";
 import { v4 as uuidv4 } from "uuid";
 import { uploadBase64ToS3 } from "@/shared/api/s3-api";
+import { IMessage } from "@/features/message-area/model/types";
 
-export type IMessage = {
-  uuid: string;
-  text: string;
-  userId?: string | null;
-  isPending?: boolean;
-  censored?: boolean;
-  hasError?: boolean;
-  notFound?: boolean;
-  createdAt?: string | Date;
-  image?: string;
+const handleQuerySuccess = async (
+  message: IMessage,
+  data: any,
+  update: Function
+) => {
+  const { images, censored, notFound } = data;
+
+  if (images && !message.image) {
+    message.hasError = false;
+    message.censored = censored;
+    await update(message, images[0]);
+  }
+
+  if (notFound && !message.image) {
+    message.notFound = true;
+    await update(message);
+  }
+};
+
+const handleQueryError = async (
+  message: IMessage,
+  error: any,
+  update: Function
+) => {
+  if (error?.response?.status === 404) {
+    message.notFound = true;
+    await update(message);
+  }
 };
 
 export const useMessageStatus = (message: IMessage) => {
-  const messageQuery = useUpdateMessageQuery(
+  const { data, error, isLoading, refetch } = useUpdateMessageQuery(
     message.uuid,
     !message.image && !message.notFound
   );
   const updateMessageMutation = useUpdateMessageMutation(message.uuid);
-
-  if (message.image) {
-    return { isLoading: false, refetch: () => {} };
-  }
+  const updateMessageImageMutation = useUpdateMessageImageMutation(
+    message.uuid
+  );
 
   const update = async (message: IMessage, image?: string) => {
-    setTimeout(async () => {
-      if (image && !message.image) {
-        message.image = `data:image/png;base64,${image}`;
-        await updateMessageMutation.mutateAsync(message);
-        const imageName = `${uuidv4()}.png`;
-        message.image = await uploadBase64ToS3(image, imageName);
-      }
+    if (image && !message.image && !updateMessageImageMutation.isPending) {
+      const imageName = `${uuidv4()}.png`;
+      message.image = `data:image/png;base64,${image}`;
       await updateMessageMutation.mutateAsync(message);
-    }, 0);
+      message.image = await updateMessageImageMutation.mutateAsync({
+        image,
+        imageName,
+      });
+    }
+    await updateMessageMutation.mutateAsync(message);
   };
 
-  if (messageQuery.data) {
-    const { images, censored, notFound } = messageQuery.data;
-    if (images) {
-      message.hasError = false;
-      message.censored = censored;
-      update(message, images[0]);
-    }
-    if (notFound && !message.image) {
-      message.notFound = true;
-      update(message);
-    }
+  if (data) {
+    handleQuerySuccess(message, data, update);
   }
 
-  if (messageQuery.error) {
-    if (messageQuery.error?.response?.status === 404) {
-      message.notFound = true;
-      update(message);
-    }
+  if (error) {
+    handleQueryError(message, error, update);
   }
 
-  return { isLoading: messageQuery.isLoading, refetch: messageQuery.refetch };
+  return { isLoading, refetch };
 };

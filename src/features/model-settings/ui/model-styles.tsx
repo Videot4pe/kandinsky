@@ -1,51 +1,50 @@
 "use client";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/ui/select";
 import { Label } from "@/shared/ui/label";
-import { useStyles } from "@/features/model-settings/model/use-styles";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSettingsStore } from "@/entities/settings/use-settings-store";
+import { ModelStylesCombobox } from "@/features/model-settings/ui/model-styles-combobox";
+import { useStyles } from "@/features/model-settings/model/use-styles";
 
 export function ModelStyles({}) {
-  const { isLoading, items } = useStyles();
+  const { comboboxItems, comboboxGroupItems } = useStyles();
 
   const style = useSettingsStore((state) => state.style);
   const setStyle = useSettingsStore((state) => state.setStyle);
+  const setNegativePrompt = useSettingsStore(
+    (state) => state.setNegativePrompt
+  );
+  const setPromptPrefix = useSettingsStore((state) => state.setPromptPrefix);
+
+  const setPreset = (presetName: string) => {
+    const preset = comboboxItems.find(
+      (p) => p.name.toLowerCase() === presetName.toLowerCase()
+    );
+    if (!preset) {
+      return;
+    }
+
+    setStyle(preset.name);
+    setNegativePrompt(preset.negative_prompt);
+    setPromptPrefix(preset.prompt);
+  };
 
   useEffect(() => {
-    if (items?.[0] && !style) {
-      setStyle(items[0].name);
+    if (comboboxItems.length && !style) {
+      const initialPreset = comboboxItems[0].value ?? "No style";
+      setPreset(initialPreset);
     }
-  }, [items]);
+  }, [comboboxItems]);
 
   return (
     <div className="grid gap-3">
       <Label htmlFor="model">Style</Label>
-      <Select
-        disabled={isLoading}
+      <ModelStylesCombobox
         value={style}
-        onValueChange={(value) => setStyle(value)}
-      >
-        <SelectTrigger
-          id="model"
-          className="items-start [&_[data-description]]:hidden"
-        >
-          <SelectValue placeholder="Select a model" />
-        </SelectTrigger>
-        <SelectContent>
-          {items.map((item) => (
-            <SelectItem value={item.name} key={item.name}>
-              {item.title}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        setValue={(value) => setPreset(value)}
+        items={comboboxItems}
+        groupedItems={comboboxGroupItems}
+      />
     </div>
   );
 }

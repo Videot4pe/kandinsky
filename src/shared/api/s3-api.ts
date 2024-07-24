@@ -20,7 +20,11 @@ export const uploadBase64ToS3 = async (
   const buffer = Buffer.from(base64Image, "base64");
 
   try {
-    await minioClient.putObject(BUCKET_NAME, imageName, buffer);
+    await minioClient.putObject(
+      BUCKET_NAME,
+      `${process.env.NEXT_PUBLIC_S3_UPLOAD_FOLDER ?? ""}/${imageName}`,
+      buffer
+    );
     return `${process.env.NEXT_PUBLIC_S3_FULL_URL}/${imageName}`;
   } catch (error) {
     console.error("Error uploading image:", error);

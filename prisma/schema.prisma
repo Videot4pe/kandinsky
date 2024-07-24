@@ -11,14 +11,20 @@ datasource db {
 }
 
 model Message {
-  uuid      String   @id
+  uuid      String  @id
   userId    String?
   image     String?
   text      String
-  isPending Boolean  @default(false)
-  notFound  Boolean  @default(false)
-  hasError  Boolean  @default(false)
-  censored  Boolean  @default(false)
+  isPending Boolean @default(false)
+  notFound  Boolean @default(false)
+  hasError  Boolean @default(false)
+  censored  Boolean @default(false)
   url       String?
+
+  width          Int?
+  height         Int?
+  style          String?
+  negativePrompt String?
+
   createdAt DateTime @default(now())
 }

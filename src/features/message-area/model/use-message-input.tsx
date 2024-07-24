@@ -2,67 +2,77 @@ import {
   useAddUpdateMessageMutation,
   useCreateMessageMutation,
 } from "@/entities/message-area/queries";
-import { ModelDto } from "@/shared/api/fusionbrain-api";
-import React, { useState } from "react";
-import { IMessage } from "@/features/message-area/model/use-message-status";
+import React, { FormEvent, useState } from "react";
 import { ToastAction } from "@/shared/ui/toast";
 import { useToast } from "@/shared/ui/use-toast";
 import { useSession } from "next-auth/react";
 import { useSettingsStore } from "@/entities/settings/use-settings-store";
+import { MessageInputRequest } from "@/features/message-area/model/types";
+
+const createFormData = (data: MessageInputRequest, modelVersion: number) => {
+  const formData = new FormData();
+  formData.append(
+    "params",
+    new Blob([JSON.stringify(data)], {
+      type: "application/json",
+    })
+  );
+  formData.append("model_id", modelVersion.toString());
+  return formData;
+};
 
 export function useMessageInput() {
   const createMessageMutation = useCreateMessageMutation();
   const addMessageMutation = useAddUpdateMessageMutation();
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { toast } = useToast();
-
   const { data: session } = useSession();
   const email = session?.user?.email;
 
   const store = useSettingsStore();
   const modelVersion = useSettingsStore((state) => state.model);
 
-  const sendMessage = async (data: ModelDto, modelVersion: string) => {
-    const formData = new FormData();
-    formData.append(
-      "params",
-      new Blob([JSON.stringify(data)], {
-        type: "application/json",
-      })
-    );
-    formData.append("model_id", modelVersion);
-    return createMessageMutation.mutateAsync(formData as FormData);
-  };
-
-  const onSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
 
-    const request: ModelDto = {
+    const prompt = store.promptPrefix
+      ? store.promptPrefix.replace("{prompt}", message)
+      : message;
+
+    const request: MessageInputRequest = {
       type: "GENERATE",
       numImages: 1,
       width: store.width,
       height: store.height,
       style: store.style,
-      negativePromptUnclip: store.negativePrompt,
+      negativePromptUnclip: store.negativePrompt ?? "",
       generateParams: {
-        query: message,
+        query: prompt,
       },
     };
 
     try {
-      const { uuid } = await sendMessage(
-        request,
-        modelVersion?.toString() ?? "4"
+      setIsLoading(true);
+      const formData = createFormData(request, modelVersion ?? 4);
+      const { uuid } = await createMessageMutation.mutateAsync(
+        formData as FormData
       );
-      const newMessage: IMessage = {
+
+      const newMessage = {
         uuid,
         userId: email,
         text: message,
         isPending: true,
+
+        width: request.width,
+        height: request.height,
+        style: request.style,
+        negativePrompt: request.negativePromptUnclip,
       };
       await addMessageMutation.mutateAsync(newMessage);
-    } catch (e) {
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Something went wrong.",
@@ -73,11 +83,13 @@ export function useMessageInput() {
           </ToastAction>
         ),
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return {
-    isLoading: createMessageMutation.isPending,
+    isLoading,
     onSubmit,
     message,
     setMessage,

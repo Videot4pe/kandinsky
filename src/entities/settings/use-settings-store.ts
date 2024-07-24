@@ -4,7 +4,8 @@ import { persist } from "zustand/middleware";
 interface State {
   width: number;
   height: number;
-  negativePrompt: string;
+  negativePrompt?: string;
+  promptPrefix?: string;
   style: string;
   model?: number;
 }
@@ -12,7 +13,8 @@ interface State {
 interface Actions {
   setWidth: (width: number) => void;
   setHeight: (height: number) => void;
-  setNegativePrompt: (negativePrompt: string) => void;
+  setNegativePrompt: (negativePrompt?: string) => void;
+  setPromptPrefix: (promptPrefix?: string) => void;
   setStyle: (style: string) => void;
   setModel: (model?: number) => void;
 }
@@ -20,8 +22,9 @@ interface Actions {
 const INITIAL_STATE: State = {
   width: 1024,
   height: 1024,
-  negativePrompt: "",
-  style: "",
+  negativePrompt: undefined,
+  promptPrefix: undefined,
+  style: "DEFAULT",
   model: undefined,
 };
 
@@ -34,8 +37,11 @@ export const useSettingsStore = create<
       ...INITIAL_STATE,
       setWidth: (width: number) => set({ width }),
       setHeight: (height: number) => set({ height }),
-      setNegativePrompt: (negativePrompt: string) => set({ negativePrompt }),
-      setStyle: (style: string) => set({ style }),
+      setNegativePrompt: (negativePrompt?: string) => set({ negativePrompt }),
+      setPromptPrefix: (promptPrefix?: string) => set({ promptPrefix }),
+      setStyle: (style) => {
+        set({ style });
+      },
       setModel: (model?: number) => set({ model }),
     }),
     {
