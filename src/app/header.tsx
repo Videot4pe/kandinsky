@@ -36,6 +36,7 @@ export function Header({ children }: { children?: any }) {
           </Link>
           {routes.map((route) => (
             <Link
+              prefetch
               className={cn(
                 "transition-colors hover:text-foreground",
                 route.path !== pathname && "text-muted-foreground"
@@ -79,6 +80,7 @@ export function Header({ children }: { children?: any }) {
                 </Link>
                 {routes.map((route) => (
                   <Link
+                    prefetch
                     className={cn(
                       "transition-colors hover:text-foreground",
                       route.path !== pathname && "text-muted-foreground"
