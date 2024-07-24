@@ -49,7 +49,7 @@ export function MobileModelSettings() {
           <span className="sr-only">Settings</span>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="max-h-[80vh]">
+      <DrawerContent className="max-h-[80dvh]">
         <DrawerHeader>
           <DrawerDescription>Settings</DrawerDescription>
         </DrawerHeader>

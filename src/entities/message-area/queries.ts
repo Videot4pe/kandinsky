@@ -48,8 +48,8 @@ export function useUpdateMessageMutation(uuid: string) {
 
 export function useUpdateMessageImageMutation(uuid: string) {
   const mutationKey = [...messageKey, uuid];
-  const mutationFn = ({ image, imageName }: ImageData) =>
-    uploadBase64ToS3(image, imageName);
+  const mutationFn = async ({ image, imageName }: ImageData) =>
+    await uploadBase64ToS3(image, imageName);
   return useMutation<string, unknown, ImageData>({
     mutationKey,
     mutationFn,

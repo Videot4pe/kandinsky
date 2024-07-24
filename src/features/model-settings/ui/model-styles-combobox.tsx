@@ -15,6 +15,15 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { useState } from "react";
 import { Preset, PresetGroup, PresetGroupName } from "@/shared/model/presets";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/shared/ui/drawer";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export function ModelStylesCombobox({
   groupedItems,
