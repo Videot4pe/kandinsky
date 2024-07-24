@@ -25,7 +25,9 @@ export const uploadBase64ToS3 = async (
       `${process.env.NEXT_PUBLIC_S3_UPLOAD_FOLDER ?? ""}/${imageName}`,
       buffer
     );
-    return `${process.env.NEXT_PUBLIC_S3_FULL_URL}/${imageName}`;
+    return `${process.env.NEXT_PUBLIC_S3_FULL_URL}/${
+      process.env.NEXT_PUBLIC_S3_UPLOAD_FOLDER ?? ""
+    }/${imageName}`;
   } catch (error) {
     console.error("Error uploading image:", error);
     throw error;
