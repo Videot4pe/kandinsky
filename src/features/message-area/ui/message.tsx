@@ -6,8 +6,10 @@ import { useMessageStatus } from "@/features/message-area/model/use-message-stat
 import { Brush, RefreshCw, ShieldX } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { IMessage } from "@/features/message-area/model/types";
+import { IMessage, isMessageImage } from "@/entities/message-area/types";
 import Image from "next/image";
+import { MessageImage } from "@/entities/images/ui/message-image";
+import { IMessageImage } from "@/entities/images/model/types";
 
 interface MessageProps {
   index: number;
@@ -15,8 +17,6 @@ interface MessageProps {
 }
 
 export function Message({ index, message }: MessageProps) {
-  // const { data } = useMessage(uuid);
-  // const message = data;
   const { isLoading, refetch } = useMessageStatus(message);
 
   if (!message) {
@@ -62,10 +62,11 @@ export function Message({ index, message }: MessageProps) {
         {!message.censored && (
           <>
             {isLoading && <Brush className="w-12 h-12 animate-bounce my-6" />}
-            {message.image && (
-              <a href={message.image} download={message.uuid}>
-                <img src={message.image} alt={message.text} />
-              </a>
+            {isMessageImage(message) && (
+              <MessageImage
+                message={message as IMessageImage}
+                isLoading={isLoading}
+              />
             )}
             {needRetry && (
               <RefreshCw

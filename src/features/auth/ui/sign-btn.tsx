@@ -7,9 +7,9 @@ import { redirect } from "next/navigation";
 export const SignBtn = () => {
   const { data: session } = useSession();
 
-  if (session === null) {
-    window.location.href = "/api/auth/signin";
-  }
+  // if (session === null) {
+  //   window.location.href = "/api/auth/signin";
+  // }
 
   const avatar = session?.user?.image;
 

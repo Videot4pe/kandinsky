@@ -5,7 +5,7 @@ import {
 } from "@/entities/message-area/queries";
 import { v4 as uuidv4 } from "uuid";
 import { uploadBase64ToS3 } from "@/shared/api/s3-api";
-import { IMessage } from "@/features/message-area/model/types";
+import { IMessage } from "@/entities/message-area/types";
 
 const handleQuerySuccess = async (
   message: IMessage,
@@ -49,13 +49,7 @@ export const useMessageStatus = (message: IMessage) => {
 
   const update = async (message: IMessage, image?: string) => {
     if (image && !message.image && !updateMessageImageMutation.isPending) {
-      const imageName = `${uuidv4()}.png`;
       message.image = `data:image/png;base64,${image}`;
-      await updateMessageMutation.mutateAsync(message);
-      message.image = await updateMessageImageMutation.mutateAsync({
-        image,
-        imageName,
-      });
     }
     await updateMessageMutation.mutateAsync(message);
   };

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { IMessage } from "@/features/message-area/model/types";
+import { IMessage } from "@/entities/message-area/types";
 
 interface MessageStore {
   messages: IMessage[];

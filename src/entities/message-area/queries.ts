@@ -10,7 +10,7 @@ import {
   updateMessage,
 } from "@/shared/api/prisma-api";
 import { getQueryClient } from "@/shared/api/query-client";
-import { IMessage } from "@/features/message-area/model/types";
+import { IMessage } from "@/entities/message-area/types";
 import { uploadBase64ToS3 } from "@/shared/api/s3-api";
 
 const messageKey = ["message"] as string[];

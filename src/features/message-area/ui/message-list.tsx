@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { Message } from "@/features/message-area/ui/message";
 import { useMutationObserver } from "@/shared/lib/use-mutation-observer";
 import { useMessages } from "@/entities/message-area/queries";
-import { IMessage } from "@/features/message-area/model/types";
+import { IMessage } from "@/entities/message-area/types";
 import { Loader2 } from "lucide-react";
 
 export function MessageList() {
