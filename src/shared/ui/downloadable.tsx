@@ -32,7 +32,9 @@ export function Downloadable({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger>{children}</ContextMenuTrigger>
+      <ContextMenuTrigger className="select-none">
+        {children}
+      </ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuItem className="cursor-pointer" onClick={handleDownload}>
           Download
