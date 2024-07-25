@@ -6,15 +6,17 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/shared/api/auth-options";
 import { v4 as uuidv4 } from "uuid";
 import { uploadBase64ToS3 } from "@/shared/api/s3-api";
+import { Prisma } from ".prisma/client";
+import SortOrder = Prisma.SortOrder;
 
-export const getMessages = async () => {
+export const getMessages = async (createdAt: SortOrder = "asc") => {
   const session = await getServerSession(authOptions);
   const user = session?.user;
   if (!user) return [];
 
   return (await prisma.message.findMany({
     where: { userId: user.email },
-    orderBy: { createdAt: "asc" },
+    orderBy: { createdAt: createdAt ?? "asc" },
   })) as IMessage[];
 };
 

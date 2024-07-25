@@ -12,15 +12,14 @@ import { isMessageImage } from "@/entities/message-area/types";
 export function Gallery() {
   const { data: messages, isLoading } = useQuery({
     queryKey: ["gallery"],
-    queryFn: () => getMessages(),
+    queryFn: () => getMessages("desc"),
   });
 
-  const reversedFilteredMessages = useMemo(
+  const filteredMessages = useMemo(
     () =>
-      (messages
-        ?.reverse()
-        ?.filter((message) => message.image ?? isMessageImage(message)) ??
-        []) as IMessageImage[],
+      (messages?.filter(
+        (message) => message.image ?? isMessageImage(message)
+      ) ?? []) as IMessageImage[],
     [messages]
   );
 
@@ -32,7 +31,7 @@ export function Gallery() {
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {reversedFilteredMessages.map((message) => (
+        {filteredMessages.map((message) => (
           <MessageImage
             key={message.uuid}
             message={message}
