@@ -43,7 +43,6 @@ export const updateMessage = async (uuid: string, message: IMessage) => {
     message.image = await uploadBase64ToS3(rawImage, imageName);
   }
 
-  console.log(message.image);
   await prisma.message.update({
     where: {
       uuid,

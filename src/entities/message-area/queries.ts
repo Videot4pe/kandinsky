@@ -42,6 +42,11 @@ export function useUpdateMessageMutation(uuid: string) {
               )
             : []
       );
+      getQueryClient().invalidateQueries({
+        queryKey: messageListKey,
+        exact: true,
+        refetchType: "all",
+      });
     },
   });
 }
@@ -66,11 +71,11 @@ export function useAddUpdateMessageMutation() {
         (previous: IMessage[] | undefined) =>
           previous ? [...previous, newMessage] : [newMessage]
       );
-      // queryClient.invalidateQueries({
-      //   queryKey: messageListKey,
-      //   exact: true,
-      //   refetchType: "all",
-      // });
+      getQueryClient().invalidateQueries({
+        queryKey: messageListKey,
+        exact: true,
+        refetchType: "all",
+      });
     },
   });
 }
