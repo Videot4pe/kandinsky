@@ -3,11 +3,13 @@ import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/shared/lib/utils";
 import Providers from "@/app/providers";
-import Head from "next/head";
 
 export const metadata: Metadata = {
   title: "Kandinsky",
   description: "Kandinsky app",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 const fontSans = FontSans({
@@ -22,9 +24,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <Head>
-        <link rel="shortcut icon" href="/favicon.ico" />
-      </Head>
       <body
         className={cn("bg-background font-sans antialiased", fontSans.variable)}
       >
