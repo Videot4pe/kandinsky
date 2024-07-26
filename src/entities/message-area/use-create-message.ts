@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query/build/modern";
+import { useMutation } from "@tanstack/react-query";
 import { IMessage } from "@/entities/message-area/types";
 import { addMessage } from "@/shared/api/prisma-api";
 import { getQueryClient } from "@/shared/api/query-client";

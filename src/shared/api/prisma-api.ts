@@ -7,28 +7,20 @@ import { authOptions } from "@/shared/api/auth-options";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
 
-export const getMessages = async (createdAt: SortOrder = "asc") => {
+export const getMessages = async (
+  options: { orderBy: { createdAt: SortOrder } } = {
+    orderBy: { createdAt: "asc" },
+  }
+) => {
+  // TODO can() write fn (upper layer)
   const session = await getServerSession(authOptions);
   const user = session?.user;
   if (!user) return [];
 
   return (await prisma.message.findMany({
     where: { userId: user.email },
-    orderBy: { createdAt: createdAt ?? "asc" },
+    orderBy: options.orderBy ?? { createdAt: "asc" },
   })) as IMessage[];
-};
-
-export const getMessage = async (uuid: string) => {
-  const session = await getServerSession(authOptions);
-  const user = session?.user;
-  if (!user) return [];
-
-  return (await prisma.message.findUnique({
-    where: {
-      uuid,
-      userId: user.email,
-    },
-  })) as IMessage;
 };
 
 export const addMessage = async (message: IMessage) => {

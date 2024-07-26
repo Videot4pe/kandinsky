@@ -12,7 +12,7 @@ import { isMessageImage } from "@/entities/message-area/types";
 export function Gallery() {
   const { data: messages, isLoading } = useQuery({
     queryKey: ["gallery"],
-    queryFn: () => getMessages("desc"),
+    queryFn: () => getMessages({ orderBy: { createdAt: "desc" } }),
   });
 
   const filteredMessages = useMemo(

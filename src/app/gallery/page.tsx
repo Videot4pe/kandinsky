@@ -18,7 +18,7 @@ export default async function GalleryPage() {
   });
   await queryClient.prefetchQuery({
     queryKey: ["gallery"],
-    queryFn: () => getMessages("desc"),
+    queryFn: () => getMessages({ orderBy: { createdAt: "desc" } }),
   });
 
   return (
