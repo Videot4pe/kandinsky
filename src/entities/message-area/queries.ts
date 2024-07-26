@@ -21,49 +21,55 @@ interface ImageData {
   imageName: string;
 }
 
-export function useCreateMessageMutation() {
+export function useRunMessageMutation() {
   return useMutation({
-    mutationKey: messageKey,
     mutationFn: modelControllerGenerate,
   });
 }
 
 export function useUpdateMessageMutation(uuid: string) {
   return useMutation<IMessage, unknown, IMessage>({
-    mutationKey: [...messageKey, uuid],
     mutationFn: (message: IMessage) => updateMessage(uuid, message),
-    onSuccess: (newMessage: IMessage) => {
-      getQueryClient().setQueryData<IMessage[]>(
-        messageListKey,
-        (previous: IMessage[] | undefined) =>
-          previous
-            ? previous.map((msg) =>
-                msg.uuid === newMessage.uuid ? newMessage : msg
-              )
-            : []
-      );
-      getQueryClient().invalidateQueries({
-        queryKey: messageListKey,
-        exact: true,
-        refetchType: "all",
-      });
+    onMutate: async (newTodo) => {
+      await getQueryClient().cancelQueries({ queryKey: messageListKey });
+      const previousTodos = getQueryClient().getQueryData(messageListKey);
+      getQueryClient().setQueryData(messageListKey, (old) => [...old, newTodo]);
+      return { previousTodos };
     },
+    onError: (err, newTodo, context) => {
+      getQueryClient().setQueryData(messageListKey, context.previousTodos);
+    },
+    onSettled: () => {
+      getQueryClient().invalidateQueries({ queryKey: messageListKey });
+    },
+    // onSuccess: (newMessage: IMessage) => {
+    //   getQueryClient().setQueryData<IMessage[]>(
+    //     messageListKey,
+    //     (previous: IMessage[] | undefined) =>
+    //       previous
+    //         ? previous.map((msg) =>
+    //             msg.uuid === newMessage.uuid ? newMessage : msg
+    //           )
+    //         : []
+    //   );
+    //   getQueryClient().invalidateQueries({
+    //     queryKey: messageListKey,
+    //     exact: true,
+    //     refetchType: "all",
+    //   });
+    // },
   });
 }
 
-export function useUpdateMessageImageMutation(uuid: string) {
-  const mutationKey = [...messageKey, uuid];
-  const mutationFn = async ({ image, imageName }: ImageData) =>
-    await uploadBase64ToS3(image, imageName);
-  return useMutation<string, unknown, ImageData>({
-    mutationKey,
-    mutationFn,
-  });
-}
+// export function useUpdateMessageImageMutation(uuid: string) {
+//   return useMutation<string, unknown, ImageData>({
+//     mutationFn: async ({ image, imageName }: ImageData) =>
+//       await uploadBase64ToS3(image, imageName),
+//   });
+// }
 
-export function useAddUpdateMessageMutation() {
+export function useCreateMessageMutation() {
   return useMutation<IMessage, unknown, IMessage>({
-    mutationKey: [...messageListKey],
     mutationFn: (message: IMessage) => addMessage(message),
     onSuccess: (newMessage: IMessage) => {
       getQueryClient().setQueryData<IMessage[]>(

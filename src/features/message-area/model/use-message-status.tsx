@@ -1,10 +1,7 @@
 import {
-  useUpdateMessageImageMutation,
   useUpdateMessageMutation,
   useUpdateMessageQuery,
 } from "@/entities/message-area/queries";
-import { v4 as uuidv4 } from "uuid";
-import { uploadBase64ToS3 } from "@/shared/api/s3-api";
 import { IMessage } from "@/entities/message-area/types";
 
 const handleQuerySuccess = async (
@@ -42,16 +39,13 @@ export const useMessageStatus = (message: IMessage) => {
     message.uuid,
     !message.image && !message.notFound
   );
-  const updateMessageMutation = useUpdateMessageMutation(message.uuid);
-  const updateMessageImageMutation = useUpdateMessageImageMutation(
-    message.uuid
-  );
+  const updateMessage = useUpdateMessageMutation(message.uuid);
 
   const update = async (message: IMessage, image?: string) => {
-    if (image && !message.image && !updateMessageImageMutation.isPending) {
+    if (image && !message.image && !updateMessage.isPending) {
       message.image = `data:image/png;base64,${image}`;
     }
-    await updateMessageMutation.mutateAsync(message);
+    await updateMessage.mutateAsync(message);
   };
 
   if (data) {
@@ -64,3 +58,11 @@ export const useMessageStatus = (message: IMessage) => {
 
   return { isLoading, refetch };
 };
+
+// Запрос на создание -> OK
+
+// Записываем в БД message { uuid } +
+
+// Запрос статуса (до тех пор пока != 'Done') -> 1. Закрыли вкладку 2. Перешли на соседнюю вкладку
+
+// Сохранение картинки в s3 => обновление сообщения

@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { uploadBase64ToS3 } from "@/shared/api/s3-api";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
+import { modelControllerGenerate } from "@/shared/api/fusionbrain-api";
 
 export const getMessages = async (createdAt: SortOrder = "asc") => {
   const session = await getServerSession(authOptions);

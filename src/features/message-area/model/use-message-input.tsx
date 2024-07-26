@@ -1,6 +1,6 @@
 import {
-  useAddUpdateMessageMutation,
   useCreateMessageMutation,
+  useRunMessageMutation,
 } from "@/entities/message-area/queries";
 import React, { FormEvent, useState } from "react";
 import { ToastAction } from "@/shared/ui/toast";
@@ -22,8 +22,8 @@ const createFormData = (data: MessageInputRequest, modelVersion: number) => {
 };
 
 export function useMessageInput() {
-  const createMessageMutation = useCreateMessageMutation();
-  const addMessageMutation = useAddUpdateMessageMutation();
+  const runMessage = useRunMessageMutation();
+  const createMessage = useCreateMessageMutation();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,9 +56,7 @@ export function useMessageInput() {
     try {
       setIsLoading(true);
       const formData = createFormData(request, modelVersion ?? 4);
-      const { uuid } = await createMessageMutation.mutateAsync(
-        formData as FormData
-      );
+      const { uuid } = await runMessage.mutateAsync(formData as FormData);
 
       const newMessage = {
         uuid,
@@ -71,7 +69,7 @@ export function useMessageInput() {
         style: request.style,
         negativePrompt: request.negativePromptUnclip,
       };
-      await addMessageMutation.mutateAsync(newMessage);
+      await createMessage.mutateAsync(newMessage);
     } catch (error) {
       toast({
         variant: "destructive",
