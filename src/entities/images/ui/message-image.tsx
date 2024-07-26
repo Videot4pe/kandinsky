@@ -46,7 +46,7 @@ export function MessageImage({
             width={width ?? message.width}
             height={height ?? message.height}
             alt={message.text}
-            className="object-cover w-full rounded-lg transition-all duration-300 group-hover:scale-110"
+            className="object-cover w-full rounded-lg transition-all duration-300 group-hover:scale-110 max-w-[512px]"
           />
           <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <h3 className="text-xl font-bold mb-2">{message.style}</h3>

@@ -11,15 +11,15 @@ const handleQuerySuccess = async (
 ) => {
   const { images, censored, notFound } = data;
 
+  if (notFound) {
+    message.notFound = true;
+    await update(message);
+  }
+
   if (images && !message.image) {
     message.hasError = false;
     message.censored = censored;
     await update(message, images[0]);
-  }
-
-  if (notFound && !message.image) {
-    message.notFound = true;
-    await update(message);
   }
 };
 
@@ -47,6 +47,10 @@ export const useMessageStatus = (message: IMessage) => {
     }
     await updateMessage.mutateAsync(message);
   };
+
+  if (message.notFound) {
+    return { isLoading, refetch };
+  }
 
   if (data) {
     handleQuerySuccess(message, data, update);

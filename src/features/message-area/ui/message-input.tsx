@@ -25,6 +25,11 @@ export function MessageInput() {
         onInput={(event) => setMessage(event.currentTarget.value)}
         id="message"
         maxLength={MAX_LENGTH}
+        onKeyDown={(e) => {
+          if (e.keyCode === 13 && !e.shiftKey) {
+            onSubmit(e);
+          }
+        }}
         placeholder="Type your request..."
         className="resize-none border-0 p-3 shadow-none focus-visible:ring-0"
       />

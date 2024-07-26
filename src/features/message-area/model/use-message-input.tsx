@@ -34,6 +34,10 @@ export function useMessageInput() {
   const onSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
 
+    if (message.length === 0) {
+      return;
+    }
+
     const prompt = store.promptPrefix
       ? store.promptPrefix.replace("{prompt}", message)
       : message;

@@ -14,7 +14,7 @@ export function useUpdateMessageStatus(uuid: string, isEnabled: boolean) {
     queryKey: [...messageKey, uuid],
     queryFn: () => modelControllerCheckGeneration(uuid),
     enabled: isEnabled,
-    retry: 10,
+    retry: 15,
     retryDelay: 3500,
   });
 }
