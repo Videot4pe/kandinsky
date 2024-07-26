@@ -4,8 +4,7 @@ import React, { LegacyRef, useEffect, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Message } from "@/features/message-area/ui/message";
 import { useMutationObserver } from "@/shared/lib/use-mutation-observer";
-import { useMessages } from "@/entities/message-area/queries";
-import { IMessage } from "@/entities/message-area/types";
+import { useMessages } from "@/entities/message-area";
 import { Loader2 } from "lucide-react";
 
 export function MessageList() {

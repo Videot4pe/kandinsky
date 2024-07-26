@@ -1,7 +1,4 @@
-import {
-  useCreateMessageMutation,
-  useRunMessageMutation,
-} from "@/entities/message-area/queries";
+import { useCreateMessage, useRunMessage } from "@/entities/message-area";
 import React, { FormEvent, useState } from "react";
 import { ToastAction } from "@/shared/ui/toast";
 import { useToast } from "@/shared/ui/use-toast";
@@ -22,8 +19,8 @@ const createFormData = (data: MessageInputRequest, modelVersion: number) => {
 };
 
 export function useMessageInput() {
-  const runMessage = useRunMessageMutation();
-  const createMessage = useCreateMessageMutation();
+  const runMessage = useRunMessage();
+  const createMessage = useCreateMessage();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 

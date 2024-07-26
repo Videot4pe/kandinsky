@@ -1,7 +1,7 @@
 import {
-  useUpdateMessageMutation,
-  useUpdateMessageQuery,
-} from "@/entities/message-area/queries";
+  useUpdateMessage,
+  useUpdateMessageStatus,
+} from "@/entities/message-area";
 import { IMessage } from "@/entities/message-area/types";
 
 const handleQuerySuccess = async (
@@ -35,11 +35,11 @@ const handleQueryError = async (
 };
 
 export const useMessageStatus = (message: IMessage) => {
-  const { data, error, isLoading, refetch } = useUpdateMessageQuery(
+  const { data, error, isLoading, refetch } = useUpdateMessageStatus(
     message.uuid,
     !message.image && !message.notFound
   );
-  const updateMessage = useUpdateMessageMutation(message.uuid);
+  const updateMessage = useUpdateMessage(message.uuid);
 
   const update = async (message: IMessage, image?: string) => {
     if (image && !message.image && !updateMessage.isPending) {
