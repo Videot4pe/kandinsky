@@ -23,11 +23,19 @@ export function useUpdateMessage(uuid: string) {
     onMutate: async (newMessage) => {
       await getQueryClient().cancelQueries({ queryKey: messageListKey });
       const previousMessages = getQueryClient().getQueryData(messageListKey);
-      if (!previousMessages.some((m) => m.uuid === newMessage.uuid)) {
-        getQueryClient().setQueryData(messageListKey, (old: IMessage[]) => [
-          ...old,
-          newMessage,
-        ]);
+      if (!previousMessages.pages[0].some((m) => m.uuid === newMessage.uuid)) {
+        getQueryClient().setQueryData(messageListKey, (data) => {
+          const firstPage = data?.pages[0];
+          const index = firstPage.findIndex((m) => m.uuid === newMessage.uuid);
+          firstPage[index] = newMessage;
+          const pages = data?.pages;
+          pages[0] = firstPage;
+
+          return {
+            pages: pages,
+            pageParams: data.pageParams,
+          };
+        });
       }
       return { previousMessages } as IContext;
     },

@@ -37,7 +37,7 @@ export function ModelStyles({}) {
   }, [comboboxItems]);
 
   return (
-    <div className="grid gap-3">
+    <div id="model-styles" className="grid gap-3">
       <Label htmlFor="model">Style</Label>
       <ModelStylesCombobox
         value={style}

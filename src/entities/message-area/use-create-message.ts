@@ -8,11 +8,18 @@ export function useCreateMessage() {
   return useMutation<IMessage, unknown, IMessage>({
     mutationFn: (message: IMessage) => addMessage(message),
     onSuccess: (newMessage: IMessage) => {
-      getQueryClient().setQueryData<IMessage[]>(
-        messageListKey,
-        (previous: IMessage[] | undefined) =>
-          previous ? [...previous, newMessage] : [newMessage]
-      );
+      getQueryClient().setQueryData<IMessage[]>(messageListKey, (data) => {
+        const firstPage = data?.pages[0];
+        // firstPage.push(newMessage);
+        firstPage.unshift(newMessage);
+        const pages = data?.pages;
+        pages[0] = firstPage;
+
+        return {
+          pages: pages,
+          pageParams: data.pageParams,
+        };
+      });
       getQueryClient().invalidateQueries({
         queryKey: messageListKey,
         exact: true,

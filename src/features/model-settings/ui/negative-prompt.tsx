@@ -9,7 +9,7 @@ export function NegativePrompt({}) {
   );
 
   return (
-    <div className="grid gap-3">
+    <div id="negative-prompt" className="grid gap-3">
       <Label htmlFor="content">Negative prompt</Label>
       <Textarea
         value={negativePrompt}

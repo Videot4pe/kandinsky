@@ -14,6 +14,7 @@ export function MessageInput() {
 
   return (
     <form
+      id="message-input"
       className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring min-h-32"
       onSubmit={onSubmit}
     >

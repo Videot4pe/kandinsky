@@ -9,7 +9,7 @@ export function ImageSize({}) {
   const setHeight = useSettingsStore((state) => state.setHeight);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div id="image-size" className="grid grid-cols-2 gap-4">
       <div className="grid gap-3">
         <Label htmlFor="top-p">Width</Label>
         <Input

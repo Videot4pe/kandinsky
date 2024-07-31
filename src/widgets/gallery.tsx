@@ -1,46 +1,52 @@
 "use client";
 
-import { getMessages } from "@/shared/api/prisma-api";
-import { useQuery } from "@tanstack/react-query";
-import React, { useMemo, useState } from "react";
-import { ImageModal } from "@/entities/images/ui/image-modal";
+import React, { useRef } from "react";
 import { Loader2 } from "lucide-react";
 import { MessageImage } from "@/entities/images/ui/message-image";
-import { IMessageImage } from "@/entities/images/model/types";
-import { isMessageImage } from "@/entities/message-area/types";
+import { useMessages } from "@/entities/message-area";
+import { ScrollArea } from "@/shared/ui/scroll-area";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export function Gallery() {
-  const { data: messages, isLoading } = useQuery({
-    queryKey: ["gallery"],
-    queryFn: () => getMessages({ orderBy: { createdAt: "desc" } }),
-  });
+  const { data, isLoading, isFetching, fetchNextPage, hasNextPage } =
+    useMessages();
 
-  const filteredMessages = useMemo(
-    () =>
-      (messages?.filter(
-        (message) => message.image ?? isMessageImage(message)
-      ) ?? []) as IMessageImage[],
-    [messages]
-  );
+  const messages = data?.pages?.flat();
+
+  const handleScroll = () => {
+    if (!isLoading && !isFetching) {
+      fetchNextPage();
+    }
+  };
 
   return (
     <>
+      <div id="scrollableDiv" className="h-full" style={{ overflow: "auto" }}>
+        <InfiniteScroll
+          dataLength={messages?.length ?? 0}
+          next={handleScroll}
+          hasMore={hasNextPage}
+          loader={<></>}
+          scrollableTarget="scrollableDiv"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {messages?.map((message) => (
+              <MessageImage
+                key={message.uuid}
+                message={message}
+                width={300}
+                height={300}
+                isLoading={isLoading}
+              />
+            ))}
+          </div>
+        </InfiniteScroll>
+      </div>
       {isLoading && (
         <div className="flex justify-center items-center h-full">
           <Loader2 className="size-10 animate-spin" />
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredMessages.map((message) => (
-          <MessageImage
-            key={message.uuid}
-            message={message}
-            width={300}
-            height={300}
-            isLoading={isLoading}
-          />
-        ))}
-      </div>
     </>
   );
 }

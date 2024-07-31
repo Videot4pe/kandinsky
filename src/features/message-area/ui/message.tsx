@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useMessageStatus } from "@/features/message-area/model/use-message-status";
 import { Brush, RefreshCw, ShieldX } from "lucide-react";
@@ -30,7 +30,7 @@ export function Message({ index, message }: MessageProps) {
     <motion.div
       key={message.uuid}
       layout
-      initial={{ opacity: 0, scale: 1, y: 50, x: 0 }}
+      initial={{ opacity: 0, scale: 1, y: 1, x: 0 }}
       animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
       exit={{ opacity: 0, scale: 1, y: 1, x: 0 }}
       transition={{
@@ -42,8 +42,8 @@ export function Message({ index, message }: MessageProps) {
         },
       }}
       style={{
-        originX: 0.5,
-        originY: 0.5,
+        originX: 0,
+        originY: 0,
       }}
       className={cn("flex flex-col gap-2 my-4 whitespace-pre-wrap items-start")}
     >
@@ -64,6 +64,7 @@ export function Message({ index, message }: MessageProps) {
             {isLoading && <Brush className="w-12 h-12 animate-bounce my-6" />}
             {isMessageImage(message) && (
               <MessageImage
+                className="h-[min(512px,calc(100vw-64px))]"
                 message={message as IMessageImage}
                 isLoading={isLoading}
               />

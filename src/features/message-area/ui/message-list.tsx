@@ -1,44 +1,59 @@
 "use client";
 
-import React, { LegacyRef, useEffect, useRef } from "react";
-import { AnimatePresence } from "framer-motion";
+import React, { useRef, useState } from "react";
 import { Message } from "@/features/message-area/ui/message";
-import { useMutationObserver } from "@/shared/lib/use-mutation-observer";
 import { useMessages } from "@/entities/message-area";
 import { Loader2 } from "lucide-react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export function MessageList() {
-  const messages = useMessages();
-  const messagesContainerRef = useRef<HTMLDivElement>();
+  const { data, isLoading, isFetching, fetchNextPage, hasNextPage } =
+    useMessages();
 
-  const scrollBottom = () => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
+  const pages = data?.pages;
+  const messages = pages?.flat();
+
+  const handleScroll = () => {
+    if (!isLoading && !isFetching) {
+      fetchNextPage();
     }
   };
 
-  useEffect(() => {
-    scrollBottom();
-  }, []);
-  useMutationObserver(messagesContainerRef, scrollBottom);
-
   return (
-    <div className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col scrollbar-hide">
-      <div ref={messagesContainerRef as LegacyRef<HTMLDivElement>}>
-        <AnimatePresence>
-          {messages.isLoading && (
-            <div className="flex justify-center h-full">
-              <Loader2 className="size-10 animate-spin" />
-            </div>
-          )}
-          {messages.data?.map((message, index) => (
+    <>
+      {isLoading && !messages?.length && (
+        <div className="flex justify-center h-full">
+          <Loader2 className="size-10 animate-spin" />
+        </div>
+      )}
+      <div
+        id="scrollableDiv"
+        className="h-full"
+        style={{
+          overflow: "auto",
+          display: "flex",
+          flexDirection: "column-reverse",
+        }}
+      >
+        <InfiniteScroll
+          dataLength={messages?.length ?? 0}
+          next={handleScroll}
+          style={{ display: "flex", flexDirection: "column-reverse" }}
+          loader={
+            <></>
+            // <div className="flex justify-center h-full">
+            // <Loader2 className="size-10 animate-spin" />
+            // </div>
+          }
+          inverse={true}
+          hasMore={hasNextPage}
+          scrollableTarget="scrollableDiv"
+        >
+          {messages?.map((message, index) => (
             <Message index={index} message={message} key={message.uuid} />
           ))}
-        </AnimatePresence>
+        </InfiniteScroll>
       </div>
-    </div>
+    </>
   );
 }
