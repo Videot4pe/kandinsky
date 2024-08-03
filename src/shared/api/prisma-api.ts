@@ -38,7 +38,6 @@ export const getMessages = async (options: MessagesOptions) => {
 };
 
 export const addMessage = async (message: IMessage) => {
-  console.log("add: ", message);
   await prisma.message.create({ data: message });
   return message;
 };

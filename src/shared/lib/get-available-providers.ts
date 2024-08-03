@@ -1,4 +1,4 @@
-import { authOptions } from "@/shared/api/auth-options";
+import { authOptions } from "@/shared/lib/auth";
 
 export async function getAvailableProviders() {
   const providers = authOptions.providers?.map((it) => ({
