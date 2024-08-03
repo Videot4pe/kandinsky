@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useMessageStatus } from "@/features/message-area/model/use-message-status";
-import { Brush, RefreshCw, ShieldX } from "lucide-react";
+import {Brush, FileX, RefreshCw, ShieldX} from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { IMessage, isMessageImage } from "@/entities/message-area/types";
@@ -59,7 +59,15 @@ export function Message({ index, message }: MessageProps) {
             <TooltipContent className="text-red-600">Censored</TooltipContent>
           </Tooltip>
         )}
-        {!message.censored && (
+        {message.notFound && (
+          <Tooltip>
+            <TooltipTrigger>
+              <FileX className="w-12 h-12 my-6 animate-shake animate-infinite animate-duration-1000 animate-ease-linear" />
+            </TooltipTrigger>
+            <TooltipContent className="text-red-600">Not found</TooltipContent>
+          </Tooltip>
+        )}
+        {!message.censored && !message.notFound && (
           <>
             {isLoading && <Brush className="w-12 h-12 animate-bounce my-6" />}
             {isMessageImage(message) && (

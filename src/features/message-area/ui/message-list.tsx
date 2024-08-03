@@ -5,6 +5,7 @@ import { Message } from "@/features/message-area/ui/message";
 import { useMessages } from "@/entities/message-area";
 import { Loader2 } from "lucide-react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import {AnimatePresence} from "framer-motion";
 
 export function MessageList() {
   const { data, isLoading, isFetching, fetchNextPage, hasNextPage } =
@@ -49,9 +50,11 @@ export function MessageList() {
           hasMore={hasNextPage}
           scrollableTarget="scrollableDiv"
         >
-          {messages?.map((message, index) => (
-            <Message index={index} message={message} key={message.uuid} />
-          ))}
+          <AnimatePresence>
+            {messages?.map((message, index) => (
+              <Message index={index} message={message} key={message.uuid} />
+            ))}
+          </AnimatePresence>
         </InfiniteScroll>
       </div>
     </>

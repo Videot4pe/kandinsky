@@ -11,7 +11,7 @@ export function Gallery() {
   const { data, isLoading, isFetching, fetchNextPage, hasNextPage } =
     useMessages();
 
-  const messages = data?.pages?.flat();
+  const messages = data?.pages?.flat()?.filter(it => !!it.image);
 
   const handleScroll = () => {
     if (!isLoading && !isFetching) {
