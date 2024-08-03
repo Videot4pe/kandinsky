@@ -1,8 +1,9 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
+
 import { LogIn, LogOut } from "lucide-react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
+import { Profile } from "@/features/auth/ui/profile";
 
 export const SignBtn = () => {
   const { data: session } = useSession();
@@ -17,12 +18,7 @@ export const SignBtn = () => {
     <>
       {session && (
         <div className="flex">
-          {avatar && (
-            <Avatar className="size-6 mr-2 self-center">
-              <AvatarImage src={avatar} alt="user" />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-          )}
+          <Profile avatar={avatar} />
           <LogOut
             className="size-4 cursor-pointer self-center"
             onClick={() => signOut()}

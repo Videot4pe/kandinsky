@@ -1,7 +1,7 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { Button } from "@/shared/ui/button";
+import { signIn } from "next-auth/react";
 
 export function ProviderBtn({
   provider,

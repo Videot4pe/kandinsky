@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.4.2",
     "@aws-sdk/client-s3": "^3.616.0",
     "@prisma/client": "^5.17.0",
     "@radix-ui/react-avatar": "^1.1.0",
@@ -25,7 +26,10 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@tanstack/react-query": "^5.51.9",
     "@tanstack/react-query-devtools": "^5.51.9",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/nodemailer": "^6.4.15",
     "axios": "^1.7.2",
+    "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -37,8 +41,9 @@
     "minio": "^8.0.1",
     "moment": "^2.30.1",
     "next": "14.2.5",
-    "next-auth": "^4.24.7",
+    "next-auth": "^5.0.0-beta.20",
     "next-s3-upload": "^0.3.4",
+    "nodemailer": "^6.9.14",
     "react": "^18",
     "react-aws-s3-typescript": "^1.1.5",
     "react-dom": "^18",
@@ -48,6 +53,7 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
     "vaul": "^0.9.1",
+    "zod": "^3.23.8",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

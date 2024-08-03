@@ -18,7 +18,7 @@ import {
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/shared/ui/button";
 import { CircleHelp, Settings } from "lucide-react";
-import { driverTour } from "@/app/driver";
+import { driverTour } from "@/shared/lib/driver";
 
 export function ModelSettings({ className }: { className?: string }) {
   return (

@@ -1,24 +1,23 @@
 import { SigninWidget } from "@/widgets/signin-widget";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/shared/api/auth-options";
 import { ProviderBtn } from "@/features/auth/ui/provider-btn";
 import { redirect } from "next/navigation";
-import { getAvailableProviders } from "@/shared/lib/get-available-providers";
+import { getOauthProviders } from "@/shared/lib/get-available-providers";
+import { auth } from "@/shared/lib/auth";
 
 export default async function SignIn() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (session) {
     redirect("/");
   }
 
-  const providers = await getAvailableProviders();
+  const oauthProviders = await getOauthProviders();
 
   return (
     <>
       <div className="h-[100dvh] w-full flex flex-col justify-center">
         <SigninWidget>
-          {Object.values(providers).map((provider) => (
+          {Object.values(oauthProviders).map((provider) => (
             <ProviderBtn key={provider.id} provider={provider} type="signin" />
           ))}
         </SigninWidget>

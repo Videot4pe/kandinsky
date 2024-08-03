@@ -2,10 +2,9 @@
 
 import prisma from "@/shared/lib/prisma";
 import { IMessage } from "@/entities/message-area/types";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/shared/api/auth-options";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
+import { auth } from "@/shared/lib/auth";
 
 export type MessagesOptions = {
   orderBy?: { createdAt: SortOrder };
@@ -17,7 +16,7 @@ type RequiredMessagesOptions = Required<MessagesOptions>;
 
 export const getMessages = async (options: MessagesOptions) => {
   // TODO can() write fn (upper layer)
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const user = session?.user;
   if (!user) return [];
 
