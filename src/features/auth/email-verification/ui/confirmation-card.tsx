@@ -19,12 +19,18 @@ export default function ConfirmationCard() {
 
   const { isLoading, error, isSuccess } = useQuery({
     queryKey: ["verifyEmail", email, token],
-    queryFn: () => verifyEmail(email!, token!),
+    queryFn: () => {
+      return verifyEmail(email!, token!);
+    },
     enabled: !!email && !!token,
     retry: false,
   });
 
   if (isSuccess) {
+    toast({
+      variant: "success",
+      title: "Email verified successfully",
+    });
     redirect("/sign-in");
   }
 

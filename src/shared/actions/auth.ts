@@ -11,7 +11,18 @@ import { EmailNotVerifiedError } from "@/shared/actions/errors";
 import prisma from "@/shared/lib/prisma";
 import axios from "axios";
 
-export async function authenticate(
+export async function authenticateWithProvider(_, formData: FormData) {
+  try {
+    const id = formData.get("id");
+    if (typeof id !== "string") return "Something went wrong.";
+
+    await signIn(id);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function authenticateWithCredentials(
   prevState: string | undefined,
   formData: FormData
 ) {

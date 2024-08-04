@@ -1,8 +1,11 @@
+"use client";
+
 import { useFormStatus } from "react-dom";
 import { Button } from "@/shared/ui/button";
 import { Loader2 } from "lucide-react";
+import React from "react";
 
-export default function ResendButton() {
+export function ProviderButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
 
   return (
@@ -12,8 +15,8 @@ export default function ResendButton() {
       className="w-full"
       disabled={pending}
     >
-      {pending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-      Resend verification link{pending ? "..." : ""}
+      {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {label}
     </Button>
   );
 }

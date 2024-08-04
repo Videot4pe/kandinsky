@@ -4,12 +4,15 @@ import { Label } from "@/shared/ui/label";
 import { Input } from "@/shared/ui/input";
 import Link from "next/link";
 import { useFormState } from "react-dom";
-import { authenticate } from "@/shared/actions/auth";
+import { authenticateWithCredentials } from "@/shared/actions/auth";
 import { redirect } from "next/navigation";
 import { AuthFormButton } from "@/features/auth/ui/auth-form-button";
 
 export function SigninForm() {
-  const [formState, action] = useFormState(authenticate, undefined);
+  const [formState, action] = useFormState(
+    authenticateWithCredentials,
+    undefined
+  );
 
   if (formState?.startsWith("EMAIL_NOT_VERIFIED")) {
     redirect(`/email/verify/send?email=${formState?.split(":")[1]}`);
