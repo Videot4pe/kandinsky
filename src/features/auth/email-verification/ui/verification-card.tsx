@@ -8,8 +8,8 @@ import ResendButton from "./resend-button";
 export function VerificationCard() {
   const searchParams = useSearchParams();
 
-  const email = searchParams.get("email");
-  const verificationSent = Boolean(searchParams.get("verification_sent"));
+  const email = searchParams?.get("email");
+  const verificationSent = Boolean(searchParams?.get("verification_sent"));
 
   const [formState, action] = useFormState(
     resendVerificationEmail.bind(null, email!),

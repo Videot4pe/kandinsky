@@ -10,6 +10,11 @@ type IContext = {
   previousMessages: IMessage[];
 };
 
+interface MessagesPage {
+  pages: IMessage[][];
+  pageParams: any[];
+}
+
 export function useUpdateMessage(uuid: string) {
   return useMutation<IMessage, unknown, IMessage, IContext>({
     mutationFn: async (message: IMessage) => {
@@ -20,23 +25,36 @@ export function useUpdateMessage(uuid: string) {
       }
       return updateMessage(uuid, message);
     },
-    onMutate: async (newMessage) => {
+    onMutate: async (newMessage: IMessage) => {
       await getQueryClient().cancelQueries({ queryKey: messageListKey });
-      const previousMessages = getQueryClient().getQueryData(messageListKey);
-      if (!previousMessages.pages[0].some((m) => m.uuid === newMessage.uuid)) {
-        getQueryClient().setQueryData(messageListKey, (data) => {
-          const firstPage = data?.pages[0];
+      const previousData =
+        getQueryClient().getQueryData<MessagesPage>(messageListKey);
+      const previousMessages = previousData?.pages.flat() || [];
+
+      if (
+        previousData &&
+        !previousData.pages[0].some((m) => m.uuid === newMessage.uuid)
+      ) {
+        getQueryClient().setQueryData<MessagesPage>(messageListKey, (data) => {
+          if (!data) return data;
+
+          const firstPage = data.pages[0];
           const index = firstPage.findIndex((m) => m.uuid === newMessage.uuid);
-          firstPage[index] = newMessage;
-          const pages = data?.pages;
+
+          if (index !== -1) {
+            firstPage[index] = newMessage;
+          }
+
+          const pages = data.pages;
           pages[0] = firstPage;
 
           return {
             pages: pages,
             pageParams: data.pageParams,
-          };
+          } as MessagesPage;
         });
       }
+
       return { previousMessages } as IContext;
     },
     onError: (err, newMessage, context: IContext | undefined) => {

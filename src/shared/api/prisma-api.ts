@@ -14,7 +14,9 @@ export type MessagesOptions = {
 
 type RequiredMessagesOptions = Required<MessagesOptions>;
 
-export const getMessages = async (options: MessagesOptions) => {
+export const getMessages = async (
+  options: MessagesOptions
+): Promise<IMessage[]> => {
   // TODO can() write fn (upper layer)
   const session = await auth();
   const user = session?.user;

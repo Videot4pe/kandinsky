@@ -1,24 +1,18 @@
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { getMessages } from "@/shared/api/prisma-api";
 import { messageListKey } from "@/entities/message-area/queries";
+import { IMessage } from "@/entities/message-area/types";
 
 export function useMessages() {
-  return useInfiniteQuery({
+  return useInfiniteQuery<IMessage[], Error>({
     queryKey: messageListKey,
-    queryFn: ({ pageParam = 0 }) => getMessages({ page: pageParam }),
+    queryFn: ({ pageParam = 0 }) => getMessages({ page: pageParam as number }),
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.length === 0) {
         return undefined;
       }
       return pages.length;
     },
-    // placeholderData: keepPreviousData,
+    initialPageParam: 0,
   });
 }
-// export function useMessages(page) {
-//   return useQuery({
-//     queryKey: [...messageListKey, page],
-//     queryFn: () => getMessages({ page }),
-//     placeholderData: keepPreviousData,
-//   });
-// }

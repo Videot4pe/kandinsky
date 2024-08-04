@@ -23,7 +23,7 @@ export const authOptions = {
     signIn: "/sign-in",
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
+    authorized({ auth, request: { nextUrl } }: any) {
       const isLoggedIn = !!auth?.user;
 
       const isOnDashboard = nextUrl.pathname === "/";

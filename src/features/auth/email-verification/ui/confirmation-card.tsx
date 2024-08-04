@@ -14,8 +14,8 @@ export default function ConfirmationCard() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
 
-  const email = searchParams.get("email");
-  const token = searchParams.get("token");
+  const email = searchParams?.get("email");
+  const token = searchParams?.get("token");
 
   const { isLoading, error, isSuccess } = useQuery({
     queryKey: ["verifyEmail", email, token],

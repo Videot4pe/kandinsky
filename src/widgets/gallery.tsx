@@ -6,12 +6,16 @@ import { MessageImage } from "@/entities/images/ui/message-image";
 import { useMessages } from "@/entities/message-area";
 import { ScrollArea } from "@/shared/ui/scroll-area";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { IMessage, isMessageImage } from "@/entities/message-area/types";
+import { IMessageImage } from "@/entities/images/model/types";
 
 export function Gallery() {
   const { data, isLoading, isFetching, fetchNextPage, hasNextPage } =
     useMessages();
 
-  const messages = data?.pages?.flat()?.filter(it => !!it.image);
+  const messages = data?.pages
+    ?.flat()
+    ?.filter((it) => !!it.image) as IMessageImage[];
 
   const handleScroll = () => {
     if (!isLoading && !isFetching) {
