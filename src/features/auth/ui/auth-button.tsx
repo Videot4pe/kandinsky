@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { signIn, signOut } from "next-auth/react";
 import { Profile } from "@/features/auth/ui/profile";
 
-export const SignBtn = () => {
+export const AuthButton = () => {
   const { data: session } = useSession();
 
   if (session === null) {

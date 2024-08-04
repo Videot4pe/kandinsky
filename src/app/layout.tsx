@@ -3,6 +3,7 @@ import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/shared/lib/utils";
 import Providers from "@/app/providers";
+import { Toaster } from "@/shared/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Kandinsky",
@@ -27,6 +28,7 @@ export default function RootLayout({
       <body
         className={cn("bg-background font-sans antialiased", fontSans.variable)}
       >
+        <Toaster />
         <Providers>{children}</Providers>
       </body>
     </html>

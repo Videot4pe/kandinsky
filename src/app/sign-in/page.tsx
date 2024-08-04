@@ -1,5 +1,5 @@
 import { SigninWidget } from "@/widgets/signin-widget";
-import { ProviderBtn } from "@/features/auth/ui/provider-btn";
+import { ProviderButton } from "@/features/auth/ui/provider-button";
 import { redirect } from "next/navigation";
 import { getOauthProviders } from "@/shared/lib/get-available-providers";
 import { auth } from "@/shared/lib/auth";
@@ -18,7 +18,11 @@ export default async function SignIn() {
       <div className="h-[100dvh] w-full flex flex-col justify-center">
         <SigninWidget>
           {Object.values(oauthProviders).map((provider) => (
-            <ProviderBtn key={provider.id} provider={provider} type="signin" />
+            <ProviderButton
+              key={provider.id}
+              provider={provider}
+              type="signin"
+            />
           ))}
         </SigninWidget>
       </div>

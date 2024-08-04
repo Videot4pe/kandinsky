@@ -3,7 +3,7 @@
 import { Button } from "@/shared/ui/button";
 import { signIn } from "next-auth/react";
 
-export function ProviderBtn({
+export function ProviderButton({
   provider,
   type = "signin",
 }: {

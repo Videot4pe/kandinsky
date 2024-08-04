@@ -1,20 +1,27 @@
-import VerifyEmail from "@/features/auth/ui/verify-email";
-
-// Import the Suspense component from React
 import { Suspense } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/shared/ui/card";
+import ConfirmationCard from "@/features/auth/email-verification/ui/confirmation-card";
 
-// Define the Verify function component
 export default function Verify() {
   return (
-    // Wrap the VerifyEmail component in a Suspense component.
-    // The Suspense component is used to handle asynchronous data loading in React applications.
-    // When a component needs to fetch data from an external source (e.g., an API call),
-    // it can be wrapped in Suspense
-    <Suspense>
-      <div className="flex flex-col">
-        {/* Render the VerifyEmail component */}
-        <VerifyEmail />
-      </div>
-    </Suspense>
+    <div className="h-[100dvh] w-full flex flex-col justify-center">
+      <Card className="mx-auto max-w-sm min-w-[300px]">
+        <CardHeader>
+          <CardTitle className="text-2xl">Email verification</CardTitle>
+          <CardDescription>Verifying your email</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <Suspense>
+            <ConfirmationCard />
+          </Suspense>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

@@ -2,9 +2,9 @@
 
 import { Label } from "@/shared/ui/label";
 import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
 import { signUp } from "@/shared/actions/auth";
 import { useFormState, useFormStatus } from "react-dom";
+import { AuthFormButton } from "@/features/auth/ui/auth-form-button";
 
 export function SignupForm() {
   const [formState, action] = useFormState(signUp, {
@@ -39,9 +39,7 @@ export function SignupForm() {
             </div>
           )}
         </div>
-        <Button type="submit" className="w-full" disabled={pending}>
-          Create an account
-        </Button>
+        <AuthFormButton label="Create an account" />
       </div>
     </form>
   );

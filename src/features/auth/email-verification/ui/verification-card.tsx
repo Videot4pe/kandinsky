@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { resendVerificationEmail } from "@/shared/actions/auth";
 import ResendButton from "./resend-button";
 
-export function EmailVerificationForm() {
+export function VerificationCard() {
   const searchParams = useSearchParams();
 
   const email = searchParams.get("email");
@@ -18,9 +18,7 @@ export function EmailVerificationForm() {
 
   return (
     <>
-      {!!formState && <div className="text-blue-500 mb-4">{formState}</div>}
-
-      {!!verificationSent && (
+      {verificationSent && (
         <div className="text-green-500 mb-4">
           A verification link has been sent to your email.
         </div>

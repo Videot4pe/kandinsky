@@ -1,7 +1,7 @@
 import { SignupWidget } from "@/widgets/signup-widget";
 import { redirect } from "next/navigation";
 import { getOauthProviders } from "@/shared/lib/get-available-providers";
-import { ProviderBtn } from "@/features/auth/ui/provider-btn";
+import { ProviderButton } from "@/features/auth/ui/provider-button";
 import { auth } from "@/shared/lib/auth";
 
 export default async function SignupPage() {
@@ -17,7 +17,7 @@ export default async function SignupPage() {
     <div className="h-[100dvh] w-full flex flex-col justify-center">
       <SignupWidget>
         {Object.values(oauthProviders).map((provider) => (
-          <ProviderBtn key={provider.id} provider={provider} type="signup" />
+          <ProviderButton key={provider.id} provider={provider} type="signup" />
         ))}
       </SignupWidget>
     </div>

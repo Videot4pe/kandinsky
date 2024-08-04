@@ -2,6 +2,7 @@
 
 import { signIn, signOut } from "@/shared/lib/auth";
 import { AuthError } from "next-auth";
+import type { User } from "@prisma/client";
 import { z } from "zod";
 import bcryptjs from "bcryptjs";
 import { randomBytes } from "crypto";
@@ -115,7 +116,7 @@ export async function logout() {
   return await signOut();
 }
 
-export const findUserByEmail = async (email: string) => {
+export const findUserByEmail = async (email: string): Promise<User | null> => {
   if (!email) {
     return null;
   }
@@ -171,7 +172,24 @@ export const resendVerificationEmail = async (email: string) => {
   return "Email verification sent.";
 };
 
-export const verifyEmail = (email: string) => {
+export const verifyEmail = async (email: string, token: string) => {
+  try {
+    const user = await findUserByEmail(email);
+    if (!user) {
+      throw new Error("Invalid verification token");
+    }
+
+    if (token !== user.emailVerifToken) {
+      throw new Error("Invalid verification token");
+    }
+
+    return updateEmailVerification(user.email);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateEmailVerification = async (email: string) => {
   return prisma.user.update({
     where: { email },
     data: {

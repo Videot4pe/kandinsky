@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/shared/ui/button";
-import { SignBtn } from "@/features/auth/ui/sign-btn";
+import { AuthButton } from "@/features/auth/ui/auth-button";
 import {
   Sheet,
   SheetContent,
@@ -96,7 +96,7 @@ export function Header({ children }: { children?: any }) {
           </Sheet>
           {children}
         </div>
-        <SignBtn />
+        <AuthButton />
       </div>
     </header>
   );
