@@ -11,7 +11,7 @@ import ConfirmationCard from "@/features/auth/email-verification/ui/confirmation
 export default function Verify() {
   return (
     <div className="h-[100dvh] w-full flex flex-col justify-center">
-      <Card className="mx-auto max-w-sm min-w-[300px]">
+      <Card className="mx-auto max-w-sm min-w-[360px]">
         <CardHeader>
           <CardTitle className="text-2xl">Email verification</CardTitle>
           <CardDescription>Verifying your email</CardDescription>

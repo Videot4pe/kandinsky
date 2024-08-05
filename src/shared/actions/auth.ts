@@ -151,20 +151,24 @@ const generateEmailVerificationToken = () => {
 };
 
 const sendVerificationEmail = async (email: string, token: string) => {
-  const emailData = {
-    from: '"Blog Nextjs Auth" <verification@test.com>',
+  const message = {
+    from: `Kandinsky <${process.env.NEXT_PUBLIC_MAIL_EMAIL_ADDRESS}>`,
     to: email,
     subject: "Email Verification",
-    message: `
+    html: `
       <p>Click the link below to verify your email:</p>
-      <a href="http://localhost:3000/email/verify?email=${email}&token=${token}">Verify Email</a>
+      <a href="${process.env.NEXT_PUBLIC_BASE_URL}/email/verify?email=${email}&token=${token}">Verify Email</a>
     `,
   };
   try {
-    return axios.post("http://localhost:3000/api/send-mail", emailData);
+    return axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/send-mail`, {
+      message,
+      apiKey: process.env.NEXT_PUBLIC_MAIL_API_KEY,
+    });
   } catch (error) {
-    console.error("Failed to send email:", error);
-    throw error;
+    return {
+      error: "Something went wrong",
+    };
   }
 };
 
@@ -172,7 +176,6 @@ export const resendVerificationEmail = async (email: string) => {
   const emailVerificationToken = generateEmailVerificationToken();
 
   try {
-    // update email verification token
     await prisma.user.update({
       where: { email },
       data: { emailVerifToken: emailVerificationToken },
@@ -180,10 +183,11 @@ export const resendVerificationEmail = async (email: string) => {
 
     await sendVerificationEmail(email, emailVerificationToken);
   } catch (error) {
-    return "Something went wrong.";
+    return {
+      error: "Something went wrong",
+    };
   }
-
-  return "Email verification sent.";
+  return;
 };
 
 export const verifyEmail = async (email: string, token: string) => {
