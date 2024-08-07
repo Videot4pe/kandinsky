@@ -1,4 +1,4 @@
-import { Preset, PresetGroup } from "@/shared/model/presets";
+import { Preset, PresetGroup } from "@/features/model-settings/model/presets";
 
 const diva: Preset[] = [
   {

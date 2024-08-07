@@ -1,9 +1,8 @@
 "use client";
 
-import { signIn } from "@/shared/lib/auth";
 import { useFormState } from "react-dom";
-import { ProviderButton } from "@/features/auth/provider/provider-button";
-import { authenticateWithProvider } from "@/shared/actions/auth";
+import { ProviderButton } from "@/features/auth/ui/provider/provider-button";
+import { authenticateWithProvider } from "@/features/auth/model/authenticate-provider";
 import { Input } from "@/shared/ui/input";
 
 export function ProviderCard({

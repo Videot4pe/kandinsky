@@ -2,7 +2,7 @@ import { SignupWidget } from "@/widgets/signup-widget";
 import { redirect } from "next/navigation";
 import { getOauthProviders } from "@/shared/lib/get-available-providers";
 import { auth } from "@/shared/lib/auth";
-import { ProviderCard } from "@/features/auth/provider/provider-card";
+import { ProviderCard } from "@/features/auth/ui/provider/provider-card";
 
 export default async function SignupPage() {
   const session = await auth();

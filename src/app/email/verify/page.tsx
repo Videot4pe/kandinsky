@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui/card";
-import ConfirmationCard from "@/features/auth/email-verification/ui/confirmation-card";
+import ConfirmationCard from "@/features/auth/ui/email-verification/confirmation-card";
 
 export default function Verify() {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
-import { findUserByEmail, verifyEmail } from "@/shared/actions/auth";
 import Link from "next/link";
+import { verifyEmail } from "@/features/auth/model/verify-email";
 import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";

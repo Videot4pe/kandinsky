@@ -8,7 +8,10 @@ import { AuthFormButton } from "@/features/auth/ui/auth-form-button";
 
 export function SignupForm() {
   const [formState, action] = useFormState(signUp, {
-    errors: {},
+    errors: {
+      email: undefined,
+      password: undefined,
+    },
   });
   const { pending } = useFormStatus();
 
@@ -24,18 +27,18 @@ export function SignupForm() {
             placeholder="m@example.com"
             required
           />
-          {formState?.errors.email && (
+          {formState?.errors?.email && (
             <div className="text-sm text-red-500">
-              {formState.errors.email.join(", ")}
+              {formState.errors.email?.join(", ")}
             </div>
           )}
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
           <Input id="password" name="password" type="password" />
-          {formState?.errors.password && (
+          {formState?.errors?.password && (
             <div className="text-sm text-red-500">
-              {formState.errors.password.join(", ")}
+              {formState.errors.password?.join(", ")}
             </div>
           )}
         </div>

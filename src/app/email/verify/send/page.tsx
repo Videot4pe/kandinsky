@@ -1,4 +1,4 @@
-import { VerificationCard } from "@/features/auth/email-verification/ui/verification-card";
+import { VerificationCard } from "@/features/auth/ui/email-verification/verification-card";
 
 import { Suspense } from "react";
 import {

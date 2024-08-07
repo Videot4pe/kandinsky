@@ -1,6 +1,13 @@
 import { useStylesQuery } from "@/entities/styles/queries";
-import { groupedPresets, presets } from "@/shared/constants/presets";
-import { Preset, PresetGroup, PresetGroupName } from "@/shared/model/presets";
+import {
+  groupedPresets,
+  presets,
+} from "@/features/model-settings/constants/presets";
+import {
+  Preset,
+  PresetGroup,
+  PresetGroupName,
+} from "@/features/model-settings/model/presets";
 
 export type Style = {
   name: string;

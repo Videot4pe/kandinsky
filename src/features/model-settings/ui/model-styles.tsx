@@ -1,7 +1,7 @@
 "use client";
 
 import { Label } from "@/shared/ui/label";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useSettingsStore } from "@/entities/settings/use-settings-store";
 import { ModelStylesCombobox } from "@/features/model-settings/ui/model-styles-combobox";
 import { useStyles } from "@/features/model-settings/model/use-styles";
@@ -16,25 +16,28 @@ export function ModelStyles({}) {
   );
   const setPromptPrefix = useSettingsStore((state) => state.setPromptPrefix);
 
-  const setPreset = (presetName: string) => {
-    const preset = comboboxItems.find(
-      (p) => p.name.toLowerCase() === presetName.toLowerCase()
-    );
-    if (!preset) {
-      return;
-    }
+  const setPreset = useCallback(
+    (presetName: string) => {
+      const preset = comboboxItems.find(
+        (p) => p.name.toLowerCase() === presetName.toLowerCase()
+      );
+      if (!preset) {
+        return;
+      }
 
-    setStyle(preset.name);
-    setNegativePrompt(preset.negative_prompt);
-    setPromptPrefix(preset.prompt);
-  };
+      setStyle(preset.name);
+      setNegativePrompt(preset.negative_prompt);
+      setPromptPrefix(preset.prompt);
+    },
+    [comboboxItems, setNegativePrompt, setPromptPrefix, setStyle]
+  );
 
   useEffect(() => {
     if (comboboxItems.length && !style) {
       const initialPreset = comboboxItems[0].value ?? "No style";
       setPreset(initialPreset);
     }
-  }, [comboboxItems]);
+  }, [comboboxItems, style, setStyle, setPreset]);
 
   return (
     <div id="model-styles" className="grid gap-3">

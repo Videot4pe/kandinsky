@@ -14,7 +14,11 @@ import {
 } from "@/shared/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { useState } from "react";
-import { Preset, PresetGroup, PresetGroupName } from "@/shared/model/presets";
+import {
+  Preset,
+  PresetGroup,
+  PresetGroupName,
+} from "@/features/model-settings/model/presets";
 import {
   Drawer,
   DrawerContent,

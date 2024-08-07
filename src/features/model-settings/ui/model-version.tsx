@@ -20,7 +20,7 @@ export function ModelVersion({}) {
     if (items?.[0] && !model) {
       setModel(items[0].id);
     }
-  }, [items]);
+  }, [items, model, setModel]);
 
   return (
     <div id="model-version" className="grid gap-3">

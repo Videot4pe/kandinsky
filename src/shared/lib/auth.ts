@@ -4,7 +4,7 @@ import YandexProvider from "next-auth/providers/yandex";
 import Credentials from "@auth/core/providers/credentials";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { findUserByEmail } from "@/shared/actions/auth";
+import { findUserByEmail } from "@/shared/api/prisma/users-api";
 
 async function getUser(
   email: string
@@ -12,7 +12,6 @@ async function getUser(
   try {
     return await findUserByEmail(email);
   } catch (error) {
-    console.error("Failed to fetch user:", error);
     throw new Error("Failed to fetch user.");
   }
 }
@@ -21,24 +20,6 @@ export const authOptions = {
   trustHost: true,
   pages: {
     signIn: "/sign-in",
-  },
-  callbacks: {
-    authorized({ auth, request: { nextUrl } }: any) {
-      const isLoggedIn = !!auth?.user;
-
-      const isOnDashboard = nextUrl.pathname === "/";
-
-      if (isOnDashboard) {
-        if (isLoggedIn) return true;
-        return false;
-      } else if (isLoggedIn) {
-        const isOnAuth =
-          nextUrl.pathname === "/sign-in" || nextUrl.pathname === "/sign-up";
-        if (isOnAuth) return Response.redirect(new URL("/", nextUrl));
-        return true;
-      }
-      return true;
-    },
   },
   providers: [
     GithubProvider({
@@ -65,7 +46,6 @@ export const authOptions = {
           if (passwordsMatch) return user;
         }
 
-        console.log("Invalid credentials");
         return null;
       },
     }),

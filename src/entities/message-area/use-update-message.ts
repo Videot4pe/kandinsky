@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@tanstack/react-query";
 import { IMessage } from "@/entities/message-area/types";
 import { messageListKey } from "@/entities/message-area/queries";
-import { updateMessage } from "@/shared/api/prisma-api";
+import { updateMessage } from "@/shared/api/prisma/messages-api";
 import { getQueryClient } from "@/shared/api/query-client";
 import { uploadBase64ToS3 } from "@/shared/api/s3-api";
 

@@ -1,5 +1,5 @@
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
-import { getMessages } from "@/shared/api/prisma-api";
+import { getMessages } from "@/shared/api/prisma/messages-api";
 import { messageListKey } from "@/entities/message-area/queries";
 import { IMessage } from "@/entities/message-area/types";
 
