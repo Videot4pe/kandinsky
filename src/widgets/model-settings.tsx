@@ -17,28 +17,42 @@ import {
 } from "@/shared/ui/drawer";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/shared/ui/button";
-import { CircleHelp, Settings } from "lucide-react";
-import { driverTour } from "@/shared/lib/driver";
+import { Settings } from "lucide-react";
+import { DriverButton } from "@/features/driver/ui/driver-button";
+import { ReactNode } from "react";
 
-export function ModelSettings({ className }: { className?: string }) {
+export function ModelSettings({
+  className,
+  platform,
+  children,
+}: {
+  className?: string;
+  platform: "desktop" | "mobile";
+  children?: ReactNode;
+}) {
   return (
     <div className={clsx("relative flex-col items-start gap-8", className)}>
       <form className="grid w-full items-start gap-6">
         <fieldset className="grid gap-6 rounded-lg border p-4">
           <legend className="-ml-1 px-1 text-sm font-medium hidden md:flex">
             Settings
-            <CircleHelp
-              className="size-4 self-center ml-2 cursor-pointer"
-              onClick={() => driverTour.drive()}
-            />
+            {children}
           </legend>
-          <ModelStyles />
-          <ModelVersion />
-          <ImageSize />
-          <NegativePrompt />
+          <ModelStyles platform={platform} />
+          <ModelVersion platform={platform} />
+          <ImageSize platform={platform} />
+          <NegativePrompt platform={platform} />
         </fieldset>
       </form>
     </div>
+  );
+}
+
+export function DesktopModelSettings({ className }: { className?: string }) {
+  return (
+    <ModelSettings platform="desktop" className={className}>
+      <DriverButton platform="desktop" />
+    </ModelSettings>
   );
 }
 
@@ -50,7 +64,12 @@ export function MobileModelSettings() {
           <VisuallyHidden>Settings</VisuallyHidden>
         </DrawerTitle>
         <DrawerTrigger asChild>
-          <Button variant="ghost" size="icon" className="md:hidden">
+          <Button
+            id="mobile-settings-button"
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+          >
             <Settings className="size-4" />
             <span className="sr-only">Settings</span>
           </Button>
@@ -59,13 +78,9 @@ export function MobileModelSettings() {
           <DrawerHeader>
             <DrawerDescription className="flex justify-center">
               Settings
-              <CircleHelp
-                className="size-4 self-center ml-2 cursor-pointer"
-                onClick={() => driverTour.drive()}
-              />
             </DrawerDescription>
           </DrawerHeader>
-          <ModelSettings />
+          <ModelSettings platform="mobile" />
         </DrawerContent>
       </Drawer>
     </>

@@ -6,7 +6,7 @@ import { useSettingsStore } from "@/entities/settings/use-settings-store";
 import { ModelStylesCombobox } from "@/features/model-settings/ui/model-styles-combobox";
 import { useStyles } from "@/features/model-settings/model/use-styles";
 
-export function ModelStyles({}) {
+export function ModelStyles({ platform }: { platform?: string }) {
   const { comboboxItems, comboboxGroupItems } = useStyles();
 
   const style = useSettingsStore((state) => state.style);
@@ -40,7 +40,7 @@ export function ModelStyles({}) {
   }, [comboboxItems, style, setStyle, setPreset]);
 
   return (
-    <div id="model-styles" className="grid gap-3">
+    <div id={`${platform}-model-styles`} className="grid gap-3">
       <Label htmlFor="model">Style</Label>
       <ModelStylesCombobox
         value={style}

@@ -10,7 +10,11 @@ import { useEffect, useState } from "react";
 import { useSettingsStore } from "@/entities/settings/use-settings-store";
 import { useModels } from "@/features/model-settings/model/use-models";
 
-export function ModelVersion({}) {
+export function ModelVersion({
+  platform,
+}: {
+  platform?: "mobile" | "desktop";
+}) {
   const { isLoading, items } = useModels();
 
   const model = useSettingsStore((state) => state.model);
@@ -23,7 +27,7 @@ export function ModelVersion({}) {
   }, [items, model, setModel]);
 
   return (
-    <div id="model-version" className="grid gap-3">
+    <div id={`${platform}-model-version`} className="grid gap-3">
       <Label htmlFor="model">Model version</Label>
       <Select
         disabled={isLoading}

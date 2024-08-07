@@ -2,14 +2,14 @@ import { Label } from "@/shared/ui/label";
 import { Input } from "@/shared/ui/input";
 import { useSettingsStore } from "@/entities/settings/use-settings-store";
 
-export function ImageSize({}) {
+export function ImageSize({ platform }: { platform: "mobile" | "desktop" }) {
   const width = useSettingsStore((state) => state.width);
   const height = useSettingsStore((state) => state.height);
   const setWidth = useSettingsStore((state) => state.setWidth);
   const setHeight = useSettingsStore((state) => state.setHeight);
 
   return (
-    <div id="image-size" className="grid grid-cols-2 gap-4">
+    <div id={`${platform}-image-size`} className="grid grid-cols-2 gap-4">
       <div className="grid gap-3">
         <Label htmlFor="top-p">Width</Label>
         <Input
