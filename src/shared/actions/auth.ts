@@ -14,16 +14,16 @@ import {
 } from "@/shared/api/prisma/users-api";
 import { sendEmail } from "@/shared/api/email-api";
 import { IEmailMessage } from "@/shared/model/email-message";
+import { emailVerificationTemplate } from "@/shared/templates/email-verification";
 
 const sendVerificationEmail = async (email: string, token: string) => {
   const message: IEmailMessage = {
     from: `Kandinsky <${process.env.NEXT_PUBLIC_MAIL_EMAIL_ADDRESS}>`,
     to: email,
     subject: "Email Verification",
-    html: `
-      <p>Click the link below to verify your email:</p>
-      <a href="${process.env.NEXT_PUBLIC_BASE_URL}/email/verify?email=${email}&token=${token}">Verify Email</a>
-    `,
+    html: emailVerificationTemplate(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/email/verify?email=${email}&token=${token}`
+    ),
   };
   try {
     return sendEmail(message);
